@@ -1,3 +1,9 @@
+/*
+* @title: App
+* @path: src/App.tsx
+* @description: Main application component
+*/
+
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
