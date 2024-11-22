@@ -21,7 +21,7 @@ This project is a React-based application that solves Crossmint's coding challen
 - Error handling and resilience for API interactions.
 
 ## Tech Stack
-- **Frontend**: React, JavaScript
+- **Frontend**: React, TypeScript
 - **Styling**: CSS/Tailwind CSS (optional for custom design)
 - **API Interaction**: Axios
 - **Environment Management**: .env for secure handling of API URLs and Candidate ID
