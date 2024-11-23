@@ -23,19 +23,48 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    console.log('POST method called');
     try {
         const body = await request.json();
-        const { row, column } = body; // Expecting row and column in the body
+        const { row, column } = body;
 
-        // Update the currentMapData with the new value
-        if (currentMapData.currentMap) {
-            currentMapData.currentMap[row][column] = 'POLYANET'; // Update with the new value
+        console.log('Received data:', { row, column });
+
+        if (row < 0 || column < 0 || !currentMapData.currentMap[row] || !currentMapData.currentMap[row][column]) {
+            throw new Error('Invalid row or column index');
         }
 
-        return NextResponse.json(currentMapData, { status: 200 }); // Return the updated map
+        currentMapData.currentMap[row][column] = 'POLYANET';
+
+        const candidateId = process.env.REACT_APP_CANDIDATE_ID;
+        console.log('Sending to API:', { row, column, candidateId });
+        
+        const response = await fetch("https://challenge.crossmint.io/api/polyanets", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                {
+                "candidateId": candidateId,
+                "row": row,
+                "column": column
+            })
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            console.error('Route.tsx : API Response:', responseData);
+            throw new Error(`Route.tsx : Failed to update remote map: ${responseData.message || 'Unknown error'}`);
+        }
+        console.log("Route.tsx : Polyanet Successfully Added to Crossmint API");
+        return NextResponse.json(currentMapData, { status: 200 });
+
     } catch (error: unknown) {
+        console.error('Error in POST method:', error);
         return NextResponse.json(
-            { error: `Failed to process current map data request: ${error}` },
+            { error: `Route.tsx : Failed to process current map data request: ${error}` },
             { status: 500 }
         );
     }

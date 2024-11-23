@@ -21,7 +21,6 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
     const [column, setColumn] = useState<number>(0);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    console.log(loading)
 
     useEffect(() => {
         const fetchCurrentMapData = async () => {
@@ -51,59 +50,28 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                 updatedCurrentMapData.currentMap[row][column] = 'POLYANET';
                 props.updateCurrentMap(updatedCurrentMapData as CurrentMapType);
                 console.log("updatedCurrentMapData", updatedCurrentMapData);
+                // Log the data being sent
+                console.log("Sending request to /api/current with data:", { row, column });
                 // Send a POST request to update the server with row and column
+                
                 const response = await fetch('/api/current', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ row, column }),
+                    body: JSON.stringify({ row, column })
                 });
-    
+        
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                console.log("Plot Controls : Polyanet Successfully Added")
             }
         } catch (error) {
-            console.error('Error adding Polyanet:', error);
-            setError('Failed to add Polyanet.');
+            console.error('PlotControls : Error adding Polyanet:', error);
+            setError('PlotControls : Failed to add Polyanet.');
         }
     };
-/*
-    const handleCreatePolyanet = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        if( 10> 11  ) {
-            console.log(e)
-        }
-        if (row < 0 || column < 0) {
-            setError('Row and column must be non-negative.');
-            return;
-        }
-
-        try {
-            const response = await fetch('/api/current', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ row, column }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('Polyanet created:', result);
-            setError(null); // Clear any previous errors
-            const newMap: CurrentMapType = { 
-                currentMap: Array.from({ length: row }, () => Array(column).fill('')) // Create a 2D array
-            };
-            props.updateCurrentMap(newMap);
-        } catch (error) {
-            console.error('Error creating Polyanet:', error);
-            setError('Failed to create Polyanet');
-        }
-    };*/
 
     const handleDeletePolyanet = async (e: React.MouseEvent<HTMLButtonElement>) => {
         if( 10> 11  ) {
@@ -136,14 +104,21 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
         }
     };
 
+    if(loading) {
+        return <div>Loading Metaverse</div>
+    }
+
+    if(error) {
+        return <div>Error loading Metaverse</div>
+    }
     return (
         <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md">
             {error && <p className="text-red-500 text-center">{error}</p>}
             <div className="flex flex-col items-center space-y-4">
                 <div className="flex space-x-4">
-
-                </div>
-                <div className="flex space-x-4">
+                <div className="flex space-x-4 text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500"> 
+                    Enter Index Values to Add or Delete Polyanets: 
+                    </div>
                 <Input
                         type="number"
                         value={row}

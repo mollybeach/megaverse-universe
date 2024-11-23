@@ -19,7 +19,7 @@ const Megaverse: React.FC = () => {
     const [currentMapData, setCurrentMapData] = useState<CurrentMapType | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-  console.log(error)
+
     useEffect(() => {
         const fetchCurrentMapData = async () => {
             try {
@@ -29,8 +29,8 @@ const Megaverse: React.FC = () => {
                 }
                 const jsonData: CurrentMapType = await response.json();
                 setCurrentMapData(jsonData);
-            } catch (error) {
-                console.error('Error fetching current map data:', error);
+            } catch (_error) {
+                console.error('Error fetching current map data:', _error);
                 setError('Failed to fetch current map data.');
             } finally {
                 setLoading(false);
@@ -77,6 +77,9 @@ const Megaverse: React.FC = () => {
 
     if (loading) {
         return <div>Loading Megaverse...</div>;
+    }
+    if (error) {
+        return <div>Error: {error}</div>;
     }
 
     return (

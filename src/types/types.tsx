@@ -14,6 +14,7 @@ import { LucideIcon } from "lucide-react";
     external?: string;
 };
 
+
 export type CurrentMapType = {
     currentMap: string[][];
 };

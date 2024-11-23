@@ -22,3 +22,18 @@ export const HeaderNavItems: HeaderNavItemsType[] = [
     { value: "map", icon: MapEmoji, label: "Map", external: "https://challenge.crossmint.com/map" },
 ];
 
+export const polyanetSolution = [
+    [2, 2],
+    [2, 8],
+    [3, 3],
+    [3, 7],
+    [4, 4],
+    [4, 6],
+    [5, 5],
+    [6, 4],
+    [6, 6],
+    [7, 3],
+    [7, 7],
+    [8, 2],
+    [8, 8]
+];
