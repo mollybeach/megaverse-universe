@@ -147,15 +147,23 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                 <Input
                         type="number"
                         value={row}
-                        onChange={(e) => setRow(Number(e.target.value))}
+                        onChange={(e) => {
+                            const value = Number(e.target.value);
+                            setRow(value < 0 ? 0 : value); // Prevent negative values
+                        }}
                         placeholder="Row"
+                        min={0} // Set minimum value to 0
                         className="w-24 h-10 text-lg border border-gray-300 rounded-md shadow-sm"
                     />
                     <Input
                         type="number"
                         value={column}
-                        onChange={(e) => setColumn(Number(e.target.value))}
+                        onChange={(e) => {
+                            const value = Number(e.target.value);
+                            setColumn(value < 0 ? 0 : value); // Prevent negative values
+                        }}
                         placeholder="Column"
+                        min={0} // Set minimum value to 0
                         className="w-24 h-10 text-lg border border-gray-300 rounded-md shadow-sm"
                     />
                     <Button onClick={() => addPolyanet(row, column)} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow">
