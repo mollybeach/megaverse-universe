@@ -88,12 +88,16 @@ export function Hero() {
             </h1>
           </div>
           <p className="text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            A React-based application that solves Crossmint&apos;s coding challenge to mint a new Megaverse into existence. Using a RESTful API, the app creates an X-shaped pattern of            
-            <span className="font-medium text-blue-600 dark:text-blue-400"> 🪐 POLYanets (CsA)</span>, in a 2D astral grid, showcasing automation, clean coding practices, and resilience.
-            <span className="font-medium text-yellow-600 dark:text-yellow-400"> </span>
+          Megaverses are 2D spaces comprised of combinations of different astral objects:    
+          <span className="font-medium text-blue-600 dark:text-blue-400"> 🪐 POLYanets
+            </span> with 
+          <span className="font-medium text-yellow-600 dark:text-yellow-400"> 🌙 SOLoons         
+           </span> around them and 
+           <span className="font-medium text-pink-600 dark:text-pink-400">  ☄ comETHs 
+            </span> floating around.
             <Link href="/megaverse">
               <span className="inline-flex items-center justify-center h-16 w-48 bg-transparent rounded-lg shadow-lg transition-transform transform hover:scale-105 cursor-pointer">
-                <span className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200">
+                <span className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
                   Play the Game! ✨
                 </span>
               </span>

@@ -12,7 +12,7 @@ import { HeaderNavItems } from "@/lib/data/metadata";
 
 const poppins = Poppins({ 
   subsets: ['latin'],
-  weight: ['600', '700']  // You can adjust weights as needed
+  weight: ['600', '700'] 
 });
 
 export function Header() {
@@ -75,8 +75,8 @@ export function Header() {
                       <span>{item.icon}</span>
                     ) : typeof item.icon === 'object' ? (
                       <Image 
-                        src={item.icon.src || ''} // Ensure src is not empty
-                        alt={item.icon.alt || 'Image description'} // Provide a default alt text
+                        src={item.icon.src || ''}
+                        alt={item.icon.alt || 'Image description'} 
                         width={24} 
                         height={24} 
                       />
