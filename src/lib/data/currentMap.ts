@@ -7,7 +7,9 @@
 import { CurrentMapType } from "@/types/types";
 
 export const currentMapData: CurrentMapType = {
-    currentMap: [
+    map: {
+        _id: "6740e00c0361e66382d7062a",
+        content: [
         [
             "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE"
         ],
@@ -41,5 +43,9 @@ export const currentMapData: CurrentMapType = {
         [
             "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE"
         ]
-    ]
+        ],
+    candidateId: "7ba6732b-f85b-4e46-b23e-16dd0cc24777",
+    phase: 1,
+        __v: 0
+    }
 };

@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { CurrentMapType } from '@/types/types';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
+import { NextResponse } from 'next/server';
 
 
 interface PlotControlsProps {
@@ -20,93 +21,105 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
     const [row, setRow] = useState<number>(0);
     const [column, setColumn] = useState<number>(0);
     const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        const fetchCurrentMapData = async () => {
-            try {
-                const response = await fetch('/api/current');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const jsonData: CurrentMapType = await response.json();
-                props.updateCurrentMap(jsonData); // Update the parent state
-            } catch (error) {
-                console.error('Error fetching current map data:', error);
-                setError('Failed to fetch current map data.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchCurrentMapData();
-    }, [props]); 
 
     const addPolyanet = async (row: number, column: number) => {
         console.log("addPolyanet", row, column);
         try {
             const updatedCurrentMapData = { ...props.currentMapData };
-            if (updatedCurrentMapData.currentMap) {
-                updatedCurrentMapData.currentMap[row][column] = 'POLYANET';
+            if (updatedCurrentMapData.map.content) {
+                updatedCurrentMapData.map.content[row][column] = 'POLYANET';
                 props.updateCurrentMap(updatedCurrentMapData as CurrentMapType);
                 console.log("updatedCurrentMapData", updatedCurrentMapData);
                 // Log the data being sent
-                console.log("Sending request to /api/current with data:", { row, column });
-                // Send a POST request to update the server with row and column
-                
+                console.log("Sending request to /api/current with data:", { 
+                    _id: props.currentMapData.map._id,
+                    content: updatedCurrentMapData.map.content,
+                    candidateId: props.currentMapData.map.candidateId,
+                    phase: props.currentMapData.map.phase,
+                    __v: props.currentMapData.map.__v,
+                    row,
+                    column
+                });
+
                 const response = await fetch('/api/current', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ row, column })
+                    body: JSON.stringify({ 
+                        _id: props.currentMapData.map._id, // Include _id
+                        content: updatedCurrentMapData.map.content, // Include updated content
+                        candidateId: props.currentMapData.map.candidateId, // Include candidateId
+                        phase: props.currentMapData.map.phase, // Include phase
+                        __v: props.currentMapData.map.__v, // Include __v
+                        row, // Include row
+                        column // Include column
+                    })
                 });
-        
+
+                const responseData = await response.json(); // Parse the response as JSON
+                console.log("response", responseData); // Log the response data
+
+                NextResponse.json(responseData, { status: 200 });
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                console.log("Plot Controls : Polyanet Successfully Added")
+                console.log("Polyanet Successfully Added");
             }
         } catch (error) {
-            console.error('PlotControls : Error adding Polyanet:', error);
-            setError('PlotControls : Failed to add Polyanet.');
+            console.error('Error adding Polyanet:', error);
+            setError('Failed to add Polyanet.');
         }
     };
 
-    const handleDeletePolyanet = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        if( 10> 11  ) {
-            console.log(e)
-        }
-        if (row < 0 || column < 0) {
-            setError('Row and column must be non-negative.');
-            return;
-        }
-
+    const handleDeletePolyanet = async (row: number, column: number) => {
+        console.log("deletePolyanet", row, column);
         try {
-            const response = await fetch(`/api/current?row=${row}&column=${column}`, {
-                method: 'DELETE',
-            });
+            const updatedCurrentMapData = { ...props.currentMapData };
+            if (updatedCurrentMapData.map.content) {
+                updatedCurrentMapData.map.content[row][column] = 'SPACE';
+                props.updateCurrentMap(updatedCurrentMapData as CurrentMapType);
+                console.log("updatedCurrentMapData", updatedCurrentMapData);
+                // Log the data being sent
+                console.log("Sending request to /api/current with data:", { 
+                    _id: props.currentMapData.map._id,
+                    content: updatedCurrentMapData.map.content,
+                    candidateId: props.currentMapData.map.candidateId,
+                    phase: props.currentMapData.map.phase,
+                    __v: props.currentMapData.map.__v,
+                    row,
+                    column
+                });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const response = await fetch('/api/current', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        _id: props.currentMapData.map._id, // Include _id
+                        content: updatedCurrentMapData.map.content, // Include updated content
+                        candidateId: props.currentMapData.map.candidateId, // Include candidateId
+                        phase: props.currentMapData.map.phase, // Include phase
+                        __v: props.currentMapData.map.__v, // Include __v
+                        row, // Include row
+                        column // Include column
+                    })
+                });
+
+                const responseData = await response.json(); // Parse the response as JSON
+                console.log("response", responseData); // Log the response data
+                NextResponse.json(responseData, { status: 200 });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                console.log("Polyanet Successfully Added");
             }
-
-            const result = await response.json();
-            console.log('Polyanet deleted:', result);
-            setError(null); // Clear any previous errors
-            const newMap: CurrentMapType = { 
-                currentMap: Array.from({ length: row }, () => Array(column).fill('')) // Create a new empty 2D array
-            };
-            props.updateCurrentMap(newMap);
         } catch (error) {
-            console.error('Error deleting Polyanet:', error);
-            setError('Failed to delete Polyanet');
+            console.error('Error adding Polyanet:', error);
+            setError('Failed to add Polyanet.');
         }
     };
-
-    if(loading) {
-        return <div>Loading Metaverse</div>
-    }
 
     if(error) {
         return <div>Error loading Metaverse</div>
@@ -141,13 +154,18 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                         min={0} // Set minimum value to 0
                         className="w-24 h-10 text-lg border border-gray-300 rounded-md shadow-sm"
                     />
-                    <Button onClick={() => addPolyanet(row, column)} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow">
+                    <Button 
+                        onClick={() => addPolyanet(row, column)} 
+                        className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200"
+                    >
                         Add 🪐
                     </Button>
-                    <Button onClick={handleDeletePolyanet} className="bg-gradient-to-r from-pink-600 to-blue-400 text-white hover:shadow-lg transition-shadow">
+                    <Button 
+                        onClick={() => handleDeletePolyanet(row, column)} 
+                        className="bg-gradient-to-r from-pink-600 to-blue-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200"
+                    >
                         Delete 🪐
                     </Button>
-
                 </div>
             </div>
         </div>

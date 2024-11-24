@@ -15,15 +15,24 @@ import { LucideIcon } from "lucide-react";
 };
 
 
+export type CellType = string | {type: number} | null;
+
 export type CurrentMapType = {
-    currentMap: string[][];
+    map: {
+        _id: string | null;
+        content: CellType[][]; // Updated to reflect the new structure
+        candidateId: string | null;
+        phase: number | null; // Include phase if needed
+        __v: number | null; // Include __v if needed
+    };
 };
+
 
 export type GoalMapType = {
-    goal: string[][];
+    goal: CellType[][];
 };
 
-export type CellType = string;
+
 
 export type RowType = CellType[];
 export type PolyanetType = {

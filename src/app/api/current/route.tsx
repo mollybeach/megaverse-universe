@@ -3,11 +3,13 @@
 * @path: /src/app/api/current/route.tsx
 */
 import { NextResponse, NextRequest } from 'next/server';
-import { currentMapData } from "@/lib/data/currentMap";
+//import { currentMapData } from "@/lib/data/currentMap";
 
 export async function GET() {
     try {
-        return NextResponse.json(currentMapData, { status: 200 });
+        const response = await fetch(`${process.env.REACT_API_API_CURRENT_MAP}`);
+        const data = await response.json();
+        return NextResponse.json(data, { status: 200 });
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json(
@@ -22,64 +24,103 @@ export async function GET() {
     }
 }
 
+
 export async function POST(request: Request) {
-    console.log('POST method called');
     try {
+        
         const body = await request.json();
-        const { row, column } = body;
+        const {  _id, content, candidateId, phase, __v, row, column } = body;
+        console.log("POST Route : ", { _id, content, candidateId, phase, __v, row, column });
 
-        console.log('Received data:', { row, column });
-
-        if (row < 0 || column < 0 || !currentMapData.currentMap[row] || !currentMapData.currentMap[row][column]) {
-            throw new Error('Invalid row or column index');
+        // Validate row and column
+        if (row < 0 || column < 0 || !content[row] || !content[row][column]) {
+            return NextResponse.json({ error: 'Invalid row or column' }, { status: 400 }); // Bad Request
         }
 
-        currentMapData.currentMap[row][column] = 'POLYANET';
+        const getResponse = await GET();
+        const data = await getResponse.json();
+        const currentMapArray = data.map.content;
 
-        const candidateId = process.env.REACT_APP_CANDIDATE_ID;
-        console.log('Sending to API:', { row, column, candidateId });
-        
-        const response = await fetch("https://challenge.crossmint.io/api/polyanets", {
+        // Update the currentMapData with the new value
+        content[row][column] = 'POLYANET';
+        currentMapArray[row][column] = 'POLYANET';
+        currentMapArray.candidateId = candidateId;
+        currentMapArray.phase = phase;
+        currentMapArray.__v = __v;
+
+        // Update the remote map on Crossmint
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/polyanets`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(
-                {
-                "candidateId": candidateId,
-                "row": row,
-                "column": column
+            body: JSON.stringify({ 
+                _id,
+                content,
+                candidateId,
+                phase,
+                __v,
+                row,
+                column
             })
         });
 
-        const responseData = await response.json();
+        const responseData = await response.json(); // Parse the response as JSON
+        console.log("Route.tsx: responseData", responseData);
 
-        if (!response.ok) {
-            console.error('Route.tsx : API Response:', responseData);
-            throw new Error(`Route.tsx : Failed to update remote map: ${responseData.message || 'Unknown error'}`);
-        }
-        console.log("Route.tsx : Polyanet Successfully Added to Crossmint API");
-        return NextResponse.json(currentMapData, { status: 200 });
-
-    } catch (error: unknown) {
-        console.error('Error in POST method:', error);
-        return NextResponse.json(
-            { error: `Route.tsx : Failed to process current map data request: ${error}` },
-            { status: 500 }
-        );
+        return NextResponse.json(responseData, { status: 200 });
+    } catch (error) {
+        console.error('Error in POST:', error);
+        return NextResponse.json({ error: `Failed to process current map data request: ${(error as Error).message}` }, { status: 500 });
     }
 }
 
 export async function DELETE(request: NextRequest) { 
-    const { searchParams } = new URL(request.url);
-    const row = parseInt(searchParams.get('row') || '0', 10);
-    const column = parseInt(searchParams.get('column') || '0', 10);
-    
     try {
-        currentMapData.currentMap[row][column] = 'SPACE';
-        return NextResponse.json(currentMapData.currentMap);
+        
+        const body = await request.json();
+        const {  _id, content, candidateId, phase, __v, row, column } = body;
+        console.log("POST Route : ", { _id, content, candidateId, phase, __v, row, column });
+
+        // Validate row and column
+        if (row < 0 || column < 0 || !content[row] || !content[row][column]) {
+            return NextResponse.json({ error: 'Invalid row or column' }, { status: 400 }); // Bad Request
+        }
+
+        const getResponse = await GET();
+        const data = await getResponse.json();
+        const currentMapArray = data.map.content;
+
+        // Update the currentMapData with the new value
+        content[row][column] = 'SPACE';
+        currentMapArray[row][column] = 'SPACE';
+        currentMapArray.candidateId = candidateId;
+        currentMapArray.phase = phase;
+        currentMapArray.__v = __v;
+
+        // Update the remote map on Crossmint
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/polyanets`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                _id,
+                content,
+                candidateId,
+                phase,
+                __v,
+                row,
+                column
+            })
+        });
+       
+        const responseData = await response.json(); // Parse the response as JSON
+        console.log("Route.tsx: responseData", responseData);
+
+        return NextResponse.json(currentMapArray, { status: 200 });
     } catch (error) {
-        console.error('Error deleting Polyanet locally:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        console.error('Error in DELETE:', error);
+        return NextResponse.json({ error: `Failed to process current map data request: ${(error as Error).message}` }, { status: 500 });
     }
 }

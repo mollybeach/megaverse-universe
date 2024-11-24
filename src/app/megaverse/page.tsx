@@ -71,7 +71,7 @@ const Megaverse: React.FC = () => {
             title: "Current Map",
             icon: Network,
             color: "blue",
-            content: <CurrentMap currentMapData={currentMapData || { currentMap: [] }} />
+            content: <CurrentMap currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} />
         },
     ];
 
@@ -84,8 +84,9 @@ const Megaverse: React.FC = () => {
 
     return (
         <div className="container mx-auto px-4 py-4">
-           <PlotControls updateCurrentMap={setCurrentMapData} currentMapData={currentMapData || { currentMap: [] } as CurrentMapType} />
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
+         
+           <PlotControls updateCurrentMap={setCurrentMapData} currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} />
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">  
                 {cardsData.map((card) => (
                     <Card
                         key={card.title}
