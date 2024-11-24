@@ -13,7 +13,8 @@ import GoalMap from '@/components/GoalMap';
 import { GoalMapType } from '@/types/types';
 import { CurrentMapType } from '@/types/types';
 import { PlotControls } from '@/components/PlotControls';
-
+import { goalMapDataPhaseTwo } from '@/lib/data/goalMap';
+import { getPhaseState, setPhase } from '@/lib/state/phaseState';
 const Megaverse: React.FC = () => {
     const [goalMapData, setGoalMapData] = useState<GoalMapType | null>(null);
     const [currentMapData, setCurrentMapData] = useState<CurrentMapType | null>(null);
@@ -29,6 +30,7 @@ const Megaverse: React.FC = () => {
                 }
                 const jsonData: CurrentMapType = await response.json();
                 setCurrentMapData(jsonData);
+                console.log("jsonData", jsonData)
             } catch (_error) {
                 console.error('Error fetching current map data:', _error);
                 setError('Failed to fetch current map data.');
@@ -65,7 +67,7 @@ const Megaverse: React.FC = () => {
             title: "Goal Map",
             icon: Network,
             color: "green",
-            content: <GoalMap goalMapData={goalMapData || { goal: [] }} />
+            content: <GoalMap goalMapData={getPhaseState().phase === 2 ? goalMapDataPhaseTwo : goalMapData || { goal: [] }} />
         },
         {
             title: "Current Map",
@@ -81,13 +83,20 @@ const Megaverse: React.FC = () => {
     if (error) {
         return <div>Error: {error}</div>;
     }
+    // if curenentMapData._id = 6740e00c0361e66382d7062c then we're deal with phase two and we need the cards to take up the entire witdth of the screen
+    // and for the cards to be stacked vertically instead of horizontally
+    console.log("cureentMapData._id", currentMapData?.map._id)
+    if(currentMapData?.map._id === process.env.REACT_APP_PHASE_TWO_ID){
+        setPhase(2);
+    }
+//console.log("getPhaseState().phase", getPhaseState().phase)
 
     return (
         <div className="container mx-auto px-4 py-4">
          
-           <PlotControls updateCurrentMap={setCurrentMapData} currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} />
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">  
-                {cardsData.map((card) => (
+           <PlotControls phase={getPhaseState().phase} updateCurrentMap={setCurrentMapData} currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} />
+           <div className={`grid gap-6 ${getPhaseState().phase ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-2'}`}>
+                { (getPhaseState().phase === 2 ? [...cardsData].reverse() : cardsData).map((card) => (
                     <Card
                         key={card.title}
                         className={`p-6 hover:shadow-lg transition-shadow border-t-4 border-t-${card.color}-500`}

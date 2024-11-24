@@ -37,3 +37,18 @@ export const polyanetSolution = [
     [8, 2],
     [8, 8]
 ];
+
+export const isPhaseTwo = false;
+
+export const metaverseMap = {
+   'SPACE': '🌌',
+   'POLYANET': '🪐',
+   'RIGHT_COMETH': '☄️',
+   'UP_COMETH': '🔼',
+   'LEFT_COMETH': '⬅️',
+   'DOWN_COMETH': '🔽',
+   'WHITE_SOLOON': '⚪️',
+   'BLUE_SOLOON': '🔵',
+   'RED_SOLOON': '🔴',
+   'PURPLE_SOLOON': '🟣'
+}
