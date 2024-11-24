@@ -14,8 +14,7 @@ import { LucideIcon } from "lucide-react";
     external?: string;
 };
 
-
-export type CellType = string | {type: number} | null;
+export type CellType = string | {type: number} | {type: number, color: string} | {type: number, direction: string} | null;
 
 export type CurrentMapType = {
     map: {
@@ -81,3 +80,15 @@ export type ApiBodyType = {
 }
 
 //& (PolyanetTypeCellType | SoloonTypeCellType | ComethTypeCellType) | null;
+
+export const cellTypes = [
+    {"type": 0},
+    {"type": 1, "color": "white"},
+    {"type": 1, "color": "blue"},
+    {"type": 1, "color": "red"},
+    {"type": 1, "color": "purple"},
+    {"type": 2, "direction": "up"},
+    {"type": 2, "direction": "down"},
+    {"type": 2, "direction": "right"},
+    {"type": 2, "direction": "left"},
+];

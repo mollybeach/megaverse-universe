@@ -33,22 +33,22 @@ const CurrentMap: React.FC<CurrentMapProps> = ({ currentMapData }) => {
                                         displayValue = "🌌";
                                     } else if (cell === "POLYANET" || (typeof cell === 'object' && cell !== null && cell.type === 0)) {
                                         displayValue = "🪐";
-                                    } else if (cell === "RIGHT_COMETH" || (typeof cell === 'object' && cell !== null && cell.type === 1)) {
-                                        displayValue = "☄️";
-                                    } else if (cell === "UP_COMETH" || (typeof cell === 'object' && cell !== null && cell.type === 2)) {
-                                        displayValue = "🔼";
-                                    } else if (cell === "LEFT_COMETH" || (typeof cell === 'object' && cell !== null && cell.type === 3)) {
-                                        displayValue = "⬅️";
-                                    } else if (cell === "DOWN_COMETH" || (typeof cell === 'object' && cell !== null && cell.type === 4)) {
-                                        displayValue = "🔽";
-                                    } else if (cell === "WHITE_SOLOON" || (typeof cell === 'object' && cell !== null && cell.type === 5)) {
+                                    } else if (cell === "WHITE_SOLOON" || (typeof cell === 'object' && cell !== null && cell.type === 1 && 'color' in cell && cell.color === "white")) {
                                         displayValue = "⚪️";
-                                    } else if (cell === "BLUE_SOLOON" || (typeof cell === 'object' && cell !== null && cell.type === 6)) {
+                                    } else if (cell === "BLUE_SOLOON" || (typeof cell === 'object' && cell !== null && cell.type === 1 && 'color' in cell && cell.color === "blue")) {
                                         displayValue = "🔵";
-                                    } else if (cell === "RED_SOLOON" || (typeof cell === 'object' && cell !== null && cell.type === 7)) {
+                                    } else if (cell === "RED_SOLOON" || (typeof cell === 'object' && cell !== null && cell.type === 1 && 'color' in cell && cell.color === "red")) {
                                         displayValue = "🔴";
-                                    } else if (cell === "PURPLE_SOLOON" || (typeof cell === 'object' && cell !== null && cell.type === 8)) {
+                                    } else if (cell === "PURPLE_SOLOON" || (typeof cell === 'object' && cell !== null && cell.type === 1 && 'color' in cell && cell.color === "purple")) {
                                         displayValue = "🟣";
+                                    } else if (cell === "RIGHT_COMETH" || (typeof cell === 'object' && cell !== null && cell.type === 2 && 'direction' in cell && cell.direction === "right")) {
+                                        displayValue = "☄️";
+                                    } else if (cell === "UP_COMETH" || (typeof cell === 'object' && cell !== null && cell.type === 2 && 'direction' in cell && cell.direction === "up")) {
+                                        displayValue = "🔼";
+                                    } else if (cell === "LEFT_COMETH" || (typeof cell === 'object' && cell !== null && cell.type === 2 && 'direction' in cell && cell.direction === "left")) {
+                                        displayValue = "⬅️";
+                                    } else if (cell === "DOWN_COMETH" || (typeof cell === 'object' && cell !== null && cell.type === 2 && 'direction' in cell && cell.direction === "down")) {
+                                        displayValue = "🔽";
                                     } else {
                                         displayValue = "";
                                     }
