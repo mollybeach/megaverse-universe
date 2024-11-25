@@ -35,11 +35,14 @@ const Megaverse: React.FC = () => {
                     next: { revalidate: 0 }
 
                 });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
                 const jsonData: CurrentMapType = await response.json();
                 setCurrentMapData(jsonData);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status} JSON: ${JSON.stringify(jsonData)}`);
+                }
+              //  const jsonData: CurrentMapType = await response.json();
+              //  setCurrentMapData(jsonData);
                 console.log("jsonData", jsonData)
             } catch (_error) {
                 console.error('Error fetching current map data:', _error);
