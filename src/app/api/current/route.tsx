@@ -8,7 +8,7 @@ import {  setPhase } from '@/lib/state/phaseState';
 import { ApiBodyType } from '@/types/types';
 export async function GET() {
     try {
-        const response = await fetch(`${process.env.REACT_API_CURRENT_MAP}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CURRENT_MAP}`);
         const data = await response.json();
             
         if (data.map._id === process.env.NEXT_PUBLIC_PHASE_TWO_ID) {
@@ -38,36 +38,36 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { row, column, emojiType } = body;
 
-        /*
-        
-        if (row < 0 || column < 0 || !content[row] || !content[row][column]) {
+        // Validate inputs
+        if (row < 0 || column < 0) {
             return NextResponse.json({ error: 'Invalid row or column' }, { status: 400 });
-        }*/
-        const getResponse = await GET();
-        const data = await getResponse.json();
-        const currentMapArray = data.map.content;
+        }
 
-        currentMapArray[row][column] = emojiType;
-
-        const apiBody : ApiBodyType = {
-            _id: data.map.content,
-            content: JSON.parse(JSON.stringify(currentMapArray)),
-            candidateId: data.map.candidateId,
-            phase: data.map.phase,
-            __v: data.map.__v,
-            row : row,
-            column : column
+        // Determine the endpoint and prepare the base request body
+        const urlParam = (emojiType.includes('_') ? emojiType.split('_')[1].toLowerCase() : emojiType.toLowerCase()) + 's';
+        const apiBody: {
+            candidateId: string | undefined;
+            row: number;
+            column: number;
+            color?: string;
+            direction?: string;
+        } = {
+            candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
+            row,
+            column
         };
-        const urlParam = (emojiType.includes('_') ? emojiType.split('_')[1].toLowerCase() : emojiType.toLowerCase()) + 's'; 
-        if (emojiType.includes('SOLOON')) { 
-            const color = emojiType.split('_')[0].toLowerCase(); // Extract color from emojiType
-            apiBody.color = color;
+
+        // Add specific properties based on emoji type
+        if (emojiType.includes('SOLOON')) {
+            apiBody.color = emojiType.split('_')[0].toLowerCase();
         }
         if (emojiType.includes('COMETH')) {
-            const direction = emojiType.split('_')[0].toLowerCase(); // Extract direction from emojiType
-            apiBody.direction = direction;
+            apiBody.direction = emojiType.split('_')[0].toLowerCase();
         }
-        console.log("apiBody", JSON.stringify(apiBody));
+
+        console.log("Making request to:", `${process.env.NEXT_PUBLIC_API_BASE_URL}/${urlParam}`);
+        console.log("With body:", JSON.stringify(apiBody));
+
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${urlParam}`, {
             method: 'POST',
             headers: {
@@ -76,13 +76,24 @@ export async function POST(request: Request) {
             body: JSON.stringify(apiBody)
         });
 
-        const responseData = await response.json(); // Parse the response as JSON
-        console.log("Route.tsx: responseData", responseData);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `API responded with status: ${response.status}`);
+        }
 
-        return NextResponse.json(responseData, { status: 200 });
+        const responseData = await response.json();
+        console.log("API Response:", responseData);
+
+        // Fetch updated map data
+        const updatedMap = await GET();
+        return updatedMap;
+
     } catch (error) {
         console.error('Error in POST:', error);
-        return NextResponse.json({ error: `Failed to process current map data request: ${(error as Error).message}` }, { status: 500 });
+        return NextResponse.json(
+            { error: `Failed to process request: ${(error as Error).message}` },
+            { status: 500 }
+        );
     }
 }
 

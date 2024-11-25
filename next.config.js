@@ -5,8 +5,8 @@ const nextConfig = {
     unoptimized: true,
     domains: ['res.cloudinary.com'],
   },
-  basePath: '/megaverse-polynet', // Your repository name
-  assetPrefix: '/megaverse-polynet/', // Your repository name with trailing slash
+  basePath: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/megaverse-polynet' : '',
+  assetPrefix: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/megaverse-polynet' : '',
 };
 
 module.exports = nextConfig;

@@ -1,10 +1,21 @@
 export const getBasePath = () => {
-    // Check if we're in development mode
-    return process.env.NODE_ENV === 'development' 
-        ? '' 
-        : process.env.NEXT_PUBLIC_BASE_PATH || '';
+    // In development, we want to call the API directly
+    if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') {
+        return '';
+    }
+    
+    // In production, we need the full path
+    return process.env.NEXT_PUBLIC_BASE_PATH || '';
 }
 
 export const getApiPath = (endpoint: string) => {
-    return `${getBasePath()}/api/${endpoint}`;
+    const basePath = getBasePath();
+    const path = `${basePath}/api/${endpoint}`;
+    console.log('API Call:', {
+        environment: process.env.NEXT_PUBLIC_NODE_ENV,
+        basePath,
+        endpoint,
+        fullPath: path
+    });
+    return path;
 }
