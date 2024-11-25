@@ -73,6 +73,16 @@ const CurrentMap: React.FC<CurrentMapProps> = ({ currentMapData, setRow, setColu
                                         <span   
                                                 onClick={() => handleEmojiClick(rowIndex, cellIndex)} 
                                                 key={cellIndex} 
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    ...(displayColor === 'none' && displayRotation === 'none' ? {} : 
+                                                        displayColor === 'white' ? { filter: 'grayscale(100%)' } :
+                                                        displayColor === 'blue' ? { filter: 'grayscale(100%) brightness(30%) sepia(100%) hue-rotate(-180deg) saturate(700%) contrast(0.8' } :
+                                                        displayColor === 'red' ? {filter: 'grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8)'} :
+                                                        displayColor === 'purple' ? {filter: 'grayscale(100%) brightness(70%) sepia(50%) hue-rotate(-100deg) saturate(500%) contrast(1)' } :
+                                                        {}
+                                                    )
+                                                }} 
                                                 className={
                                                     displayRotation === 'up' ? 'rotate-[48deg] inline-block top-2 right-1 relative' :
                                                     displayRotation === 'down' ? 'rotate-[230deg] inline-block right-3 bottom-2 relative' :
@@ -80,17 +90,6 @@ const CurrentMap: React.FC<CurrentMapProps> = ({ currentMapData, setRow, setColu
                                                     displayRotation === 'left' ? 'rotate-[330deg] inline-block left-1 bottom-1 relative' :
                                                     ''
                                                 }
-                                              style={{
-                                                cursor: 'pointer',
-                                                ...(displayColor === 'none' && displayRotation === 'none' ? {} : 
-                                                    displayColor === 'white' ? { filter: 'grayscale(100%)' } :
-                                                    displayColor === 'blue' ? { filter: 'grayscale(100%) brightness(30%) sepia(100%) hue-rotate(-180deg) saturate(700%) contrast(0.8' } :
-                                                    displayColor === 'red' ? {filter: 'grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8)'} :
-                                                    displayColor === 'purple' ? {filter: 'grayscale(100%) brightness(70%) sepia(50%) hue-rotate(-100deg) saturate(500%) contrast(1)' } :
-                                                    {}
-                                                )
-                                                
-                                              }} 
                                         >                       
                                             {displayValue}
                                         </span>

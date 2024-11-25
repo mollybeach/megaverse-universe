@@ -139,14 +139,54 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                 </div>
                 {props.phase && (
                     <div className="flex space-x-4">
-                        <Button onClick={() => addEmoji('RIGHT_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add ➡️</Button>
-                        <Button onClick={() => addEmoji('UP_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add 🔼</Button>
-                        <Button onClick={() => addEmoji('LEFT_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add ⬅️</Button>
-                        <Button onClick={() => addEmoji('DOWN_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add 🔽</Button>
-                        <Button onClick={() => addEmoji('WHITE_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add ⚪️</Button>
-                        <Button onClick={() => addEmoji('BLUE_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add 🔵</Button>
-                        <Button onClick={() => addEmoji('RED_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add 🔴</Button>
-                        <Button onClick={() => addEmoji('PURPLE_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add 🟣</Button>
+                        <Button onClick={() => addEmoji('WHITE_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                            Add 
+                            <span style={{ filter: 'grayscale(100%)' }}>
+                                🌕
+                            </span>
+                        </Button>
+                        <Button onClick={() => addEmoji('BLUE_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add 
+                            <span style={{ filter: 'grayscale(100%) brightness(30%) sepia(100%) hue-rotate(-180deg) saturate(700%) contrast(0.8)' }}>
+                                🌕
+                            </span>
+                        </Button>
+                        <Button onClick={() => addEmoji('RED_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add 
+                            <span style={{ filter: 'grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8)' }}>
+                                🌕
+                            </span>
+                        </Button>
+                        <Button onClick={() => addEmoji('PURPLE_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add 
+                            <span style={{ filter: 'grayscale(100%) brightness(70%) sepia(50%) hue-rotate(-100deg) saturate(500%) contrast(1)' }}>
+                                🌕
+                            </span>
+                        </Button>
+                        <Button onClick={() => addEmoji('UP_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                            Add
+                            <span className='rotate-[48deg] inline-block top-2 right-1 relative'>
+                                ☄️
+                            </span>
+                        </Button>
+                        <Button onClick={() => addEmoji('DOWN_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                            Add
+                            <span className='rotate-[230deg] inline-block right-3 bottom-2 relative'>
+                                ☄️
+                            </span>
+                        </Button>
+                        <Button onClick={() => addEmoji('RIGHT_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                            Add
+                            <span className='rotate-[140deg] inline-block right-3 top-1 relative'>
+                                ☄️
+                            </span>
+                        </Button>
+
+                        <Button onClick={() => addEmoji('LEFT_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                            Add
+                            <span className='rotate-[330deg] inline-block left-1 bottom-1 relative'>
+                                ☄️
+                            </span>
+                        </Button>
+                        
+                       
                     </div>
                 )}
             </div>
