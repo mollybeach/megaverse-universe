@@ -10,10 +10,9 @@ const poppins = Poppins({
 
 export function Hero() {
   const [moons, setMoons] = useState<string[]>([]);
-  const [rotation, setRotation] = useState(0); // State to track rotation angle
+  const [rotation, setRotation] = useState(0); 
 
   useEffect(() => {
-    // Create an array of moon emojis with 16 emojis
     const moonArray = [
       '🪐', '🌙', '🌘', '💫', '🌕', '🪐', 
       '🌒', '🌙', '🪐', '🌖', '🌑', '💫', 
@@ -21,12 +20,10 @@ export function Hero() {
     ];
     setMoons(moonArray);
 
-    // Set interval to update rotation
     const interval = setInterval(() => {
-      setRotation((prevRotation) => prevRotation - 1); // Decrement rotation angle for reverse rotation
-    }, 50); // Adjust speed of rotation (lower is faster)
+      setRotation((prevRotation) => prevRotation - 1);
+    }, 50); 
 
-    // Clear interval on component unmount
     return () => clearInterval(interval);
   }, []);
 
@@ -35,15 +32,12 @@ export function Hero() {
       <div className="inset-0 bg-gradient-to-r from-blue-900/10 to-yellow-500/10 rounded-xl blur-3xl -z-10" />
       <div className="flex flex-col items-center gap-6 text-center">
         <div className="relative">
-      
-          
-          {/* Centered Circle of Moons */}
           <div className="relative flex justify-center items-center" style={{ height: '400px', width: '400px', marginTop: '40px' }}>
             <div
               className="absolute"
               style={{
-                transform: `rotate(${rotation}deg)`, // Apply rotation
-                transition: 'transform 0.1s linear', // Smooth transition
+                transform: `rotate(${rotation}deg)`, 
+                transition: 'transform 0.1s linear',
                 height: '100%',
                 width: '100%',
                 display: 'flex',
@@ -57,15 +51,13 @@ export function Hero() {
                   className="absolute"
                   style={{
                     transform: `rotate(${(index * 22.5)}deg) translate(200px) rotate(-${(index * 22.5)}deg)`, // Adjust rotation for 16 emojis
-                    fontSize: '3rem', // Adjust size as needed for larger moons
+                    fontSize: '3rem',
                   }}
                 >
                   {moon}
                 </span>
               ))}
             </div>
-
-            {/* Logo in the center */}
             <div className="relative z-10 bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full shadow-md">
               <div className="bg-white dark:bg-slate-950 rounded-full p-1">
                 <Image 

@@ -21,6 +21,9 @@ const Megaverse: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
+    const [row, setRow] = useState<number>(0);
+    const [column, setColumn] = useState<number>(0);
+
     useEffect(() => {
         const fetchCurrentMapData = async () => {
             try {
@@ -73,7 +76,7 @@ const Megaverse: React.FC = () => {
             title: "Current Map",
             icon: Network,
             color: "blue",
-            content: <CurrentMap currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} />
+            content: <CurrentMap currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} setRow={setRow} setColumn={setColumn} />
         },
     ];
 
@@ -94,7 +97,7 @@ const Megaverse: React.FC = () => {
     return (
         <div className="container mx-auto px-4 py-4">
          
-           <PlotControls phase={getPhaseState().phase} updateCurrentMap={setCurrentMapData} currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} />
+           <PlotControls phase={getPhaseState().phase} updateCurrentMap={setCurrentMapData} currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} row={row} column={column} />
            <div className={`grid gap-6 ${getPhaseState().phase ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-2'}`}>
                 { (getPhaseState().phase === 2 ? [...cardsData].reverse() : cardsData).map((card) => (
                     <Card

@@ -13,44 +13,31 @@ interface PlotControlsProps {
     phase: number;
     currentMapData: CurrentMapType;
     updateCurrentMap: (newMap: CurrentMapType) => void;
+    row: number;
+    column: number;
 }
 
-/*
-Phase 2 
-Polyanets
-POST /api/polyanets with arguments 'row' and 'column' for their position in the map
-DELETE /api/polyanets with arguments 'row' and 'column' will delete a Polyanet if you made a mistake
-Soloons
-POST /api/soloons with arguments 'row' and 'column' for their position in the map.
-Additionally you should provide a 'color' argument which can be "blue", "red", "purple" or "white"
-DELETE /api/soloons with arguments 'row' and 'column' will delete a Polyanet if you made a mistake
-Cometh
-POST /api/comeths with arguments 'row' and 'column' for their position in the map.
-Additionally you should provide a 'direction' argument which can be "up", "down", "right" or "left"
-DELETE /api/comeths with arguments 'row' and 'column' will delete a Polyanet if you made a mistake
-*/
 export const PlotControls: React.FC<PlotControlsProps> = (props) => {
-    const [row, setRow] = useState<number>(0);
-    const [column, setColumn] = useState<number>(0);
     const [error, setError] = useState<string | null>(null);
 
     const addEmoji = async (emojiType: string) => {
-        console.log(`Adding ${emojiType} at`, row, column);
+        console.log(`Adding ${emojiType} at`, props.row, props.column);
         try {
             const updatedCurrentMapData = { ...props.currentMapData };
             if (updatedCurrentMapData.map.content) {
-                if (!Array.isArray(updatedCurrentMapData.map.content[row])) {
-                    updatedCurrentMapData.map.content[row] = [];
+                if (!Array.isArray(updatedCurrentMapData.map.content[props.row])) {
+                    updatedCurrentMapData.map.content[props.row] = [];
                 }
-                updatedCurrentMapData.map.content[row][column] = emojiType;
+                updatedCurrentMapData.map.content[props.row][props.column] = emojiType;
 
                 console.log("Updated Content Structure:", JSON.stringify(updatedCurrentMapData.map.content));
 
                 props.updateCurrentMap(updatedCurrentMapData as CurrentMapType);
                 console.log("updatedCurrentMapData", JSON.stringify(updatedCurrentMapData));
+
                 const requestBody = {
-                    row,
-                    column,
+                    row: props.row,
+                    column: props.column,
                     emojiType
                 }
 
@@ -78,11 +65,11 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
     };
 
     const handleDeleteEmoji = async ({emojiType}: {emojiType: string}) => {
-        console.log("deleteEmoji", row, column);
+        console.log("deleteEmoji", props.row, props.column);
         try {
             const updatedCurrentMapData = { ...props.currentMapData };
             if (updatedCurrentMapData.map.content) {
-                updatedCurrentMapData.map.content[row][column] = 'SPACE'; // Replace with SPACE
+                updatedCurrentMapData.map.content[props.row][props.column] = 'SPACE'; // Replace with SPACE
                 props.updateCurrentMap(updatedCurrentMapData as CurrentMapType);
                 console.log("updatedCurrentMapData", updatedCurrentMapData);
 
@@ -97,8 +84,8 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                         candidateId: props.currentMapData.map.candidateId,
                         phase: props.currentMapData.map.phase,
                         __v: props.currentMapData.map.__v,
-                        row,
-                        column,
+                        row: props.row,
+                        column: props.column,
                         emojiType
                     })
                 });
@@ -127,26 +114,14 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                 <div className="flex space-x-4">
                     <Input
                         type="number"
-                        value={row}
-                        onChange={(e) => {
-                            const value = Number(e.target.value);
-                            setRow(value < 0 ? 0 : value); // Prevent negative values
-                        }}
-                        placeholder="Row"
-                        min={0}
-                        max={props.phase === 2 ? 29 : 11}
+                        value={props.row}
+                        readOnly
                         className="w-24 h-10 text-lg border border-gray-300 rounded-md shadow-sm"
                     />
                     <Input
                         type="number"
-                        value={column}
-                        onChange={(e) => {
-                            const value = Number(e.target.value);
-                            setColumn(value < 0 ? 0 : value); // Prevent negative values
-                        }}
-                        placeholder="Column"
-                        min={0}
-                        max={props.phase === 2 ? 29 : 11}
+                        value={props.column}
+                        readOnly
                         className="w-24 h-10 text-lg border border-gray-300 rounded-md shadow-sm"
                     />
                     <Button 
@@ -178,5 +153,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
         </div>
     );
 };
+
+export default PlotControls;
 
   

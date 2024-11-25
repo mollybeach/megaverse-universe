@@ -9,10 +9,17 @@ import { CurrentMapType, RowType, CellType } from '@/types/types';
 
 interface CurrentMapProps {
     currentMapData: CurrentMapType;
+    setRow: (row: number) => void;
+    setColumn: (column: number) => void;
 }
 
-const CurrentMap: React.FC<CurrentMapProps> = ({ currentMapData }) => {
+const CurrentMap: React.FC<CurrentMapProps> = ({ currentMapData, setRow, setColumn }) => {
     const currentMapArray = currentMapData?.map.content;
+
+    const handleEmojiClick = (rowIndex: number, cellIndex: number) => {
+        setRow(rowIndex);
+        setColumn(cellIndex);
+    };
 
     if (!currentMapArray || currentMapArray.length === 0) {
         return <div>Loading...</div>;
@@ -63,7 +70,9 @@ const CurrentMap: React.FC<CurrentMapProps> = ({ currentMapData }) => {
                                         displayValue = "🌌";
                                     }
                                     return (
-                                        <span key={cellIndex} 
+                                        <span   
+                                                onClick={() => handleEmojiClick(rowIndex, cellIndex)} 
+                                                key={cellIndex} 
                                                 className={
                                                     displayRotation === 'up' ? 'rotate-[48deg] inline-block top-2 right-1 relative' :
                                                     displayRotation === 'down' ? 'rotate-[230deg] inline-block right-3 bottom-2 relative' :
@@ -72,6 +81,7 @@ const CurrentMap: React.FC<CurrentMapProps> = ({ currentMapData }) => {
                                                     ''
                                                 }
                                               style={{
+                                                cursor: 'pointer',
                                                 ...(displayColor === 'none' && displayRotation === 'none' ? {} : 
                                                     displayColor === 'white' ? { filter: 'grayscale(100%)' } :
                                                     displayColor === 'blue' ? { filter: 'grayscale(100%) brightness(30%) sepia(100%) hue-rotate(-180deg) saturate(700%) contrast(0.8' } :
@@ -79,6 +89,7 @@ const CurrentMap: React.FC<CurrentMapProps> = ({ currentMapData }) => {
                                                     displayColor === 'purple' ? {filter: 'grayscale(100%) brightness(70%) sepia(50%) hue-rotate(-100deg) saturate(500%) contrast(1)' } :
                                                     {}
                                                 )
+                                                
                                               }} 
                                         >                       
                                             {displayValue}
