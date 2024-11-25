@@ -32,22 +32,6 @@ export type GoalMapType = {
 
 export type RowType = CellType[];
 
-
-/*
-Phase 2 
-Polyanets
-POST /api/polyanets with arguments 'row' and 'column' for their position in the map
-DELETE /api/polyanets with arguments 'row' and 'column' will delete a Polyanet if you made a mistake
-Soloons
-POST /api/soloons with arguments 'row' and 'column' for their position in the map.
-Additionally you should provide a 'color' argument which can be "blue", "red", "purple" or "white"
-DELETE /api/soloons with arguments 'row' and 'column' will delete a Polyanet if you made a mistake
-Cometh
-POST /api/comeths with arguments 'row' and 'column' for their position in the map.
-Additionally you should provide a 'direction' argument which can be "up", "down", "right" or "left"
-DELETE /api/comeths with arguments 'row' and 'column' will delete a Polyanet if you made a mistake
-*/
-
 export type PolyanetTypeCellType ={
     row: number;
     column: number;

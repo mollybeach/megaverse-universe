@@ -81,6 +81,7 @@ jobs:
           NEXT_PUBLIC_CURRENT_MAP: ${{ secrets.NEXT_PUBLIC_CURRENT_MAP }}
           NEXT_PUBLIC_PROJECT_ONE_ID: ${{ secrets.NEXT_PUBLIC_PROJECT_ONE_ID }}
           NEXT_PUBLIC_PROJECT_TWO_ID: ${{ secrets.NEXT_PUBLIC_PROJECT_TWO_ID }}
+          NEXT_PUBLIC_NODE_ENV: ${{ secrets.NEXT_PUBLIC_NODE_ENV }}
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { CurrentMapType } from '@/types/types';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getApiPath } from '@/utils/paths';
 
 interface PlotControlsProps {
     phase: number;
@@ -43,7 +44,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
 
                 console.log("Request Body:", JSON.stringify(requestBody));
 
-                const response = await fetch('/api/current', {
+                const response = await fetch(getApiPath('current'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -73,7 +74,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                 props.updateCurrentMap(updatedCurrentMapData as CurrentMapType);
                 console.log("updatedCurrentMapData", updatedCurrentMapData);
 
-                const response = await fetch('/api/current', {
+                const response = await fetch(getApiPath('current'), {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',

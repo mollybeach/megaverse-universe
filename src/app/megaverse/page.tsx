@@ -15,6 +15,8 @@ import { CurrentMapType } from '@/types/types';
 import { PlotControls } from '@/components/PlotControls';
 import { goalMapDataPhaseTwo } from '@/lib/data/goalMap';
 import { getPhaseState, setPhase } from '@/lib/state/phaseState';
+import { getApiPath } from '@/utils/paths';
+
 const Megaverse: React.FC = () => {
     const [goalMapData, setGoalMapData] = useState<GoalMapType | null>(null);
     const [currentMapData, setCurrentMapData] = useState<CurrentMapType | null>(null);
@@ -27,7 +29,7 @@ const Megaverse: React.FC = () => {
     useEffect(() => {
         const fetchCurrentMapData = async () => {
             try {
-                const response = await fetch('/api/current');
+                const response = await fetch(getApiPath('current'));
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -48,7 +50,7 @@ const Megaverse: React.FC = () => {
     useEffect(() => {
         const fetchGoalMap = async () => {
             try {
-                const response = await fetch('/api/goal');
+                const response = await fetch(getApiPath('goal'));
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
