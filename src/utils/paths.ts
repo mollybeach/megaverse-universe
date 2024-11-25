@@ -1,13 +1,14 @@
 export const getApiPath = (endpoint: string) => {
-    const environment = process.env.NEXT_PUBLIC_NODE_ENV || 'production';
-    const basePath = environment === 'production' ? '/megaverse-universe' : '';
+    // Remove the base path for Cloudflare Pages
+    const basePath = '';
     
+    // Log the configuration for debugging
     console.log('API Configuration:', {
-      environment,
+      platform: typeof process !== 'undefined' ? 'Node.js' : 'Cloudflare',
       basePath,
       endpoint,
-      fullPath: `${basePath}/api/${endpoint}`
+      fullPath: `/api/${endpoint}`
     });
   
-    return `${basePath}/api/${endpoint}`;
-  };
+    return `/api/${endpoint}`;
+};
