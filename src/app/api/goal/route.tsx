@@ -6,7 +6,7 @@
 
 import { NextResponse } from 'next/server';
 import { goalMapData } from "@/lib/data/goalMap";
-      
+
 export async function GET() {
   try {
       return NextResponse.json(goalMapData, { status: 200 });
