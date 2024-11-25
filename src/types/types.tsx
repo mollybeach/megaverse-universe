@@ -19,18 +19,16 @@ export type CellType = string | {type: number} | {type: number, color: string} |
 export type CurrentMapType = {
     map: {
         _id: string | null;
-        content: CellType[][]; // Updated to reflect the new structure
+        content: CellType[][];
         candidateId: string | null;
-        phase: number | null; // Include phase if needed
-        __v: number | null; // Include __v if needed
+        phase: number | null; 
+        __v: number | null; 
     };
 };
-
 
 export type GoalMapType = {
     goal: CellType[][];
 };
-
 
 export type RowType = CellType[];
 
