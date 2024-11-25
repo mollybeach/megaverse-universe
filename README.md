@@ -73,4 +73,4 @@ To get started with the Megaverse X Creator, follow these steps:
 This project is open-source and available under the MIT License.
 
 ## Contributing
-Contributions and feedback are welcome! If you have suggestions for improvements or new features, feel free to open an issue or submit a pull request.
+Contributions and feedback are welcome! If you have suggestions for improvements or new features, feel free to open an issue or submit a pull request
