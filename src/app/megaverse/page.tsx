@@ -29,7 +29,7 @@ const Megaverse: React.FC = () => {
     useEffect(() => {
         const fetchCurrentMapData = async () => {
             try {
-                const response = await fetch('current', {
+                const response = await fetch('/api/current', {
                     method: 'GET',
                     cache: 'no-store',
                     next: { revalidate: 0 }
