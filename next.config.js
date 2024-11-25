@@ -1,7 +1,13 @@
-import { setupDevPlatform } from "@cloudflare/next-on-pages/next-dev";
+const { setupDevPlatform } = require("@cloudflare/next-on-pages/next-dev");
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  output: 'export',
+  images: {
+    unoptimized: true,
+    domains: ['res.cloudinary.com'],
+  }
+};
 
 if (process.env.NODE_ENV === "development") {
   try {
@@ -11,4 +17,4 @@ if (process.env.NODE_ENV === "development") {
   }
 }
 
-export default nextConfig; 
+module.exports = nextConfig; 
