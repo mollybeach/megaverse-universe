@@ -5,7 +5,10 @@
 import { NextResponse, NextRequest } from 'next/server';
 import {  setPhase } from '@/lib/state/phaseState';
 
-//export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
+//export const runtime = 'edge'; // Optional: Add if you want to use edge runtime
+
+export const revalidate = 0;
 
 export async function GET() {
     console.log('Current API route hit!');
@@ -77,28 +80,37 @@ export async function POST(request: Request) {
         const baseUrl = 'https://challenge.crossmint.io/api';
         const endpoint = `${baseUrl}/${urlParam}`;
 
+        const requestBody = {
+            candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
+            row,
+            column,
+            ...(color && { color }),
+            ...(direction && { direction })
+        };
+
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
-                row,
-                column,
-                ...(color && { color }),
-                ...(direction && { direction })
-            })
+            body: JSON.stringify(requestBody)
         });
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('API error:', {
-                status: response.status,
-                statusText: response.statusText,
-                body: errorText
-            });
-            throw new Error(`API error: ${response.status} ${response.statusText}`);
+            return NextResponse.json({
+                error: 'Request failed',
+                details: {
+                    message: 'API request failed',
+                    status: response.status,
+                    statusText: response.statusText,
+                    responseBody: errorText,
+                    requestDetails: {
+                        endpoint,
+                        body: requestBody
+                    }
+                }
+            }, { status: 500 });
         }
 
         return NextResponse.json({ success: true }, { status: 200 });
@@ -108,7 +120,10 @@ export async function POST(request: Request) {
         return NextResponse.json({
             error: 'Request failed',
             details: {
-                message: error instanceof Error ? error.message : String(error)
+                message: error instanceof Error ? error.message : String(error),
+                type: error instanceof Error ? error.name : 'Unknown',
+                stack: error instanceof Error ? error.stack : undefined,
+                timestamp: new Date().toISOString()
             }
         }, { status: 500 });
     }

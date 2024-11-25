@@ -2,11 +2,12 @@ const { setupDevPlatform } = require("@cloudflare/next-on-pages/next-dev");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
   images: {
     unoptimized: true,
     domains: ['res.cloudinary.com'],
-  }
+  },
+  basePath: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/megaverse-universe' : '',
+  assetPrefix: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/megaverse-universe' : '',
 };
 
 if (process.env.NODE_ENV === "development") {
@@ -15,6 +16,7 @@ if (process.env.NODE_ENV === "development") {
   } catch (e) {
     console.warn("Failed to setup dev platform:", e);
   }
+  
 }
 
 module.exports = nextConfig; 
