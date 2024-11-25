@@ -1,5 +1,5 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
   output: 'export',
   images: {
     unoptimized: true,
@@ -9,4 +9,4 @@ const nextConfig = {
   assetPrefix: '/megaverse-polynet/', // Your repository name with trailing slash
 };
 
-export default nextConfig;
+module.exports = nextConfig;
