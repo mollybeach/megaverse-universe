@@ -6,7 +6,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import {  setPhase } from '@/lib/state/phaseState';
 
 export const dynamic = 'force-dynamic';
-//export const runtime = 'edge'; // Optional: Add if you want to use edge runtime
+export const runtime = process.env.NODE_ENV === 'production' ? 'edge' : 'nodejs';
 
 export const revalidate = 0;
 
