@@ -7,7 +7,7 @@ import {  setPhase } from '@/lib/state/phaseState';
 //import { PolyanetTypeCellType, SoloonTypeCellType, ComethTypeCellType, ApiBodyType } from '@/types/types';
 import { ApiBodyType } from '@/types/types';
 
-export const dynamic = 'force-dynamic';
+//export const dynamic = 'force-dynamic';
 
 export async function GET() {
     console.log('Current API route hit!');
@@ -19,9 +19,7 @@ export async function GET() {
         const response = await fetch(process.env.NEXT_PUBLIC_CURRENT_MAP, {
             headers: {
                 'Content-Type': 'application/json',
-            },
-            cache: 'no-store',
-            next: { revalidate: 0 }
+            }
         });
 
         if (!response.ok) {
