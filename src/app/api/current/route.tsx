@@ -4,8 +4,6 @@
 */
 import { NextResponse, NextRequest } from 'next/server';
 import {  setPhase } from '@/lib/state/phaseState';
-//import { PolyanetTypeCellType, SoloonTypeCellType, ComethTypeCellType, ApiBodyType } from '@/types/types';
-import { ApiBodyType } from '@/types/types';
 
 //export const dynamic = 'force-dynamic';
 
