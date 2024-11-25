@@ -6,8 +6,8 @@ const nextConfig = {
     unoptimized: true,
     domains: ['res.cloudinary.com'],
   },
-  basePath: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/megaverse-universe' : '',
-  assetPrefix: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/megaverse-universe' : '',
+  basePath: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/' : '',
+  assetPrefix: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/' : '',
 };
 
 if (process.env.NODE_ENV === "development") {
