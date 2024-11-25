@@ -75,7 +75,12 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
         env:
-          NEXT_PUBLIC_BASE_PATH: /megaverse-polynet
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+          NEXT_PUBLIC_CANDIDATE_ID: ${{ secrets.NEXT_PUBLIC_CANDIDATE_ID }}
+          NEXT_PUBLIC_GOAL_MAP: ${{ secrets.NEXT_PUBLIC_GOAL_MAP }}
+          NEXT_PUBLIC_CURRENT_MAP: ${{ secrets.NEXT_PUBLIC_CURRENT_MAP }}
+          NEXT_PUBLIC_PROJECT_ONE_ID: ${{ secrets.NEXT_PUBLIC_PROJECT_ONE_ID }}
+          NEXT_PUBLIC_PROJECT_TWO_ID: ${{ secrets.NEXT_PUBLIC_PROJECT_TWO_ID }}
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

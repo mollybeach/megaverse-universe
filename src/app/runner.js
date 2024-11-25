@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_API_BASE_URL;
-const candidateId = process.env.REACT_APP_CANDIDATE_ID;
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const candidateId = process.env.NEXT_PUBLIC_CANDIDATE_ID;
 
 const fetchMap = async () => {
     try {

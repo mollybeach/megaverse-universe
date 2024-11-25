@@ -42,8 +42,8 @@ To get started with the Megaverse X Creator, follow these steps:
 
 3. **Add a `.env` file** with your API details:
    ```plaintext
-   REACT_APP_API_BASE_URL=https://challenge.crossmint.io/api
-   REACT_APP_CANDIDATE_ID=your_candidate_id_here
+   NEXT_PUBLIC_API_BASE_URL=https://challenge.crossmint.io/api
+   NEXT_PUBLIC_CANDIDATE_ID=your_candidate_id_here
    ```
 
 4. **Start the development server**:

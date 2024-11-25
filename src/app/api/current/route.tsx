@@ -11,10 +11,10 @@ export async function GET() {
         const response = await fetch(`${process.env.REACT_API_CURRENT_MAP}`);
         const data = await response.json();
             
-        if (data.map._id === process.env.REACT_APP_PHASE_TWO_ID) {
+        if (data.map._id === process.env.NEXT_PUBLIC_PHASE_TWO_ID) {
             setPhase(2);
         }
-        if (data.map._id === process.env.REACT_APP_PHASE_ONE_ID) {
+        if (data.map._id === process.env.NEXT_PUBLIC_PHASE_ONE_ID) {
             setPhase(1);
         }
         return NextResponse.json(data, { status: 200 });
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
             apiBody.direction = direction;
         }
         console.log("apiBody", JSON.stringify(apiBody));
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/${urlParam}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${urlParam}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ export async function DELETE(request: NextRequest) {
         };
 
         // Update the remote map on Crossmint
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/polyanets`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/polyanets`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
