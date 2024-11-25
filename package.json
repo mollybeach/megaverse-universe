@@ -1,13 +1,13 @@
 {
-  "name": "megaverse-polyanet",
+  "name": "megaverse-universe",
   "version": "0.1.0",
   "description": "A React-based application that creates a new 'Megaverse' by minting an X-shaped pattern of POLYanets using a RESTful API.",
-  "homepage": "https://mollybeach.github.io/megaverse-polyanet",
+  "homepage": "https://mollybeach.github.io/megaverse-universe",
   "author": "mollybeach",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/mollybeach/megaverse-polyanet.git"
+    "url": "https://github.com/mollybeach/megaverse-universe.git"
   },
   "scripts": {
     "dev": "next dev",

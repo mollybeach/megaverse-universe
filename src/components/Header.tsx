@@ -99,7 +99,7 @@ export function Header() {
           <div className="flex items-center gap-4">
             <ModeToggle />
             <Link
-              href="https://github.com/mollybeach/megaverse-polyanet"
+              href="https://github.com/mollybeach/megaverse-universe"
               className="flex items-center gap-2 text-sm text-muted-foreground
                          px-4 py-2 rounded-lg transition-all duration-300
                          hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-purple-500/10

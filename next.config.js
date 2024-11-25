@@ -6,8 +6,8 @@ const nextConfig = {
     unoptimized: true,
     domains: ['res.cloudinary.com'],
   },
-  basePath: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/megaverse-polyanet' : '',
-  assetPrefix: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/megaverse-polyanet' : '',
+  basePath: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/megaverse-universe' : '',
+  assetPrefix: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '/megaverse-universe' : '',
 };
 
 module.exports = nextConfig;
