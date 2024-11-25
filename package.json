@@ -2,6 +2,7 @@
   "name": "megaverse-polyanet",
   "version": "0.1.0",
   "description": "A React-based application that creates a new 'Megaverse' by minting an X-shaped pattern of POLYanets using a RESTful API.",
+  "homepage": "https://mollybeach.github.io/megaverse-polyanet",
   "author": "mollybeach",
   "private": false,
   "repository": {
@@ -13,13 +14,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "go": "next build && next dev"
+    "go": "next build && next dev",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d out",
+    "export": "next export"
   },
   "license": "MIT",
   "dependencies": {
     "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/react-slot": "^1.1.0",
-    "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -34,10 +37,12 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
+    "gh-pages": "^6.2.0",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^3.4.15",
     "typescript": "^5"
   }
 }
