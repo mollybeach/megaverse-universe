@@ -29,10 +29,11 @@ const Megaverse: React.FC = () => {
     useEffect(() => {
         const fetchCurrentMapData = async () => {
             try {
-                const response = await fetch(getApiPath('current'), {
+                const response = await fetch('current', {
                     method: 'GET',
                     cache: 'no-store',
                     next: { revalidate: 0 }
+
                 });
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -77,7 +78,13 @@ const Megaverse: React.FC = () => {
             icon: Network,
             color: "green",
             content: <GoalMap goalMapData={getPhaseState().phase === 2 ? goalMapDataPhaseTwo : goalMapData || { goal: [] }} />
-        }
+        },
+        {
+            title: "Current Map",
+            icon: Network,
+            color: "blue",
+            content: <CurrentMap currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} setRow={setRow} setColumn={setColumn} />
+        },
     ];
 
     if (loading) {
