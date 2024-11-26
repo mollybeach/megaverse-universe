@@ -96,13 +96,11 @@ const Megaverse: React.FC = () => {
     if (error) {
         return <div>Error: {error}</div>;
     }
-    // if curenentMapData._id = 6740e00c0361e66382d7062c then we're deal with phase two and we need the cards to take up the entire witdth of the screen
-    // and for the cards to be stacked vertically instead of horizontally
-    console.log("cureentMapData._id", currentMapData?.map._id)
+    console.log("currentMapData", currentMapData)
+    console.log("currentMapData._id", currentMapData?.map._id)
     if(currentMapData?.map._id === process.env.NEXT_PUBLIC_PHASE_TWO_ID){
         setPhase(2);
     }
-//console.log("getPhaseState().phase", getPhaseState().phase)
 
     return (
         <div className="container mx-auto px-4 py-4">
