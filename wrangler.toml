@@ -1,4 +1,9 @@
 name = "megaverse-universe"
-compatibility_date = "2024-11-25"
-compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".vercel/output/static"
+
+[build]
+command = "pnpm install --no-frozen-lockfile && pnpm run build"
+output_dir = ".vercel/output/static"
+
+[build.environment]
+NODE_VERSION = "18.17.1"
+PNPM_VERSION = "8.7.1"
