@@ -8,14 +8,14 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Network } from "lucide-react";
-import CurrentMap from '@/components/CurrentMap';
-import GoalMap from '@/components/GoalMap';
+import Map from '@/components/Map';
 import { GoalMapType } from '@/types/types';
 import { CurrentMapType } from '@/types/types';
 import { PlotControls } from '@/components/PlotControls';
-import { goalMapDataPhaseTwo } from '@/lib/data/goalMap';
 import { getPhaseState, setPhase } from '@/lib/state/phaseState';
 import { getApiPath } from '@/utils/paths';
+import { CellType } from '@/types/types';
+import { LoadingCircle } from '@/components/LoadingCircle';
 
 const Megaverse: React.FC = () => {
     const [goalMapData, setGoalMapData] = useState<GoalMapType | null>(null);
@@ -37,12 +37,13 @@ const Megaverse: React.FC = () => {
                 });
                 const jsonData: CurrentMapType = await response.json();
                 setCurrentMapData(jsonData);
+                if (jsonData.map._id === process.env.NEXT_PUBLIC_PHASE_TWO_ID) {
+                    setPhase(2);
+                }
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status} JSON: ${JSON.stringify(jsonData)}`);
                 }
-              //  const jsonData: CurrentMapType = await response.json();
-              //  setCurrentMapData(jsonData);
                 console.log("jsonData", jsonData)
             } catch (_error) {
                 console.error('Error fetching current map data:', _error);
@@ -74,24 +75,26 @@ const Megaverse: React.FC = () => {
 
         fetchGoalMap();
     }, []);
-
+    const currentMapArray : CellType[][] = currentMapData?.map.content || [];
+    const goalMapArray : CellType[][] = goalMapData?.goal || [];
+    console.log("phase", getPhaseState().phase)
     const cardsData = [
         {
             title: "Goal Map",
             icon: Network,
             color: "green",
-            content: <GoalMap goalMapData={getPhaseState().phase === 2 ? goalMapDataPhaseTwo : goalMapData || { goal: [] }} />
+            content: <Map mapArray={goalMapArray || []}  setRow={setRow} setColumn={setColumn} />
         },
         {
             title: "Current Map",
             icon: Network,
             color: "blue",
-            content: <CurrentMap currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} setRow={setRow} setColumn={setColumn} />
+            content: <Map mapArray={currentMapArray || []}  setRow={setRow} setColumn={setColumn} />
         },
     ];
 
     if (loading) {
-        return <div>Loading Megaverse...</div>;
+        return <LoadingCircle message="Loading Megaverse..." />;
     }
     if (error) {
         return <div>Error: {error}</div>;

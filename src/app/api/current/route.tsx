@@ -11,7 +11,6 @@ export const runtime = 'edge';
 export const revalidate = 0;
 
 export async function GET() {
-    console.log('Current API route hit!');
     try {
         if (!process.env.NEXT_PUBLIC_CURRENT_MAP) {
             throw new Error('NEXT_PUBLIC_CURRENT_MAP environment variable is not defined');
@@ -57,7 +56,6 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { row, column, emojiType } = body;
 
-        // Parse emojiType
         let urlParam: string;
         let direction: string | null = null;
         let color: string | null = null;

@@ -1,35 +1,35 @@
 /*
-* @title: CurrentMap
-* @path: src/components/CurrentMap.tsx
+* @title: Map
+* @path: src/components/Map.tsx
 * @description: Component to display the current megaverse map
 */
 
 import React from 'react';
-import { CurrentMapType, RowType, CellType } from '@/types/types';
+import { RowType, CellType } from '@/types/types';
+import { LoadingCircle } from './LoadingCircle';
 
-interface CurrentMapProps {
-    currentMapData: CurrentMapType;
+interface MapProps {
+    mapArray: CellType[][];
     setRow: (row: number) => void;
     setColumn: (column: number) => void;
 }
 
-const CurrentMap: React.FC<CurrentMapProps> = ({ currentMapData, setRow, setColumn }) => {
-    const currentMapArray = currentMapData?.map.content;
+const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }) => {
 
     const handleEmojiClick = (rowIndex: number, cellIndex: number) => {
         setRow(rowIndex);
         setColumn(cellIndex);
     };
 
-    if (!currentMapArray || currentMapArray.length === 0) {
-        return <div>Loading...</div>;
+    if (!mapArray || mapArray.length === 0) {
+        return <LoadingCircle message="Loading Megaverse..." />;
     }
 
     return (
         <div className="container mx-auto p-4">
             <div className="max-w-[1200px] mx-auto">
                 <div style={{ letterSpacing: '0.5em' }}>
-                    {currentMapArray.map((row: RowType, rowIndex: number) => (
+                    {mapArray.map((row: RowType, rowIndex: number) => (
                         <div key={rowIndex} className="current-row">
                             <div>
                                 {row.map((cell: CellType, cellIndex: number) => {
@@ -84,10 +84,10 @@ const CurrentMap: React.FC<CurrentMapProps> = ({ currentMapData, setRow, setColu
                                                     )
                                                 }} 
                                                 className={
-                                                    displayRotation === 'up' ? 'rotate-[48deg] inline-block top-2 right-1 relative' :
-                                                    displayRotation === 'down' ? 'rotate-[230deg] inline-block right-3 bottom-2 relative' :
-                                                    displayRotation === 'right' ? 'rotate-[140deg] inline-block right-3 top-1 relative' :
-                                                    displayRotation === 'left' ? 'rotate-[330deg] inline-block left-1 bottom-1 relative' :
+                                                    displayRotation === 'up' ? 'rotate-[48deg] inline-block top-1 right-0 relative' :
+                                                    displayRotation === 'down' ? 'rotate-[230deg] inline-block right-1 bottom-1 relative' :
+                                                    displayRotation === 'right' ? 'rotate-[140deg] inline-block right-2 top-1 relative' :
+                                                    displayRotation === 'left' ? 'rotate-[330deg] inline-block left-0bottom-1 relative' :
                                                     ''
                                                 }
                                         >                       
@@ -107,5 +107,5 @@ const CurrentMap: React.FC<CurrentMapProps> = ({ currentMapData, setRow, setColu
     );
 };
 
-export default CurrentMap;
+export default Map;
 

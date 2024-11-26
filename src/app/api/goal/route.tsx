@@ -5,11 +5,21 @@
 */
 
 import { NextResponse } from 'next/server';
-import { goalMapData } from "@/lib/data/goalMap";
+import { setPhase } from '@/lib/state/phaseState';
 
 export async function GET() {
   try {
-      return NextResponse.json(goalMapData, { status: 200 });
+    const response = await fetch(process.env.NEXT_PUBLIC_GOAL_MAP!,{
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const jsonData = await response.json();
+    
+   if(jsonData.goal.length > 13){
+        setPhase(2);
+   }
+      return NextResponse.json(jsonData, { status: 200 });
   } catch (error: unknown) {
       if (error instanceof Error) {
           return NextResponse.json(

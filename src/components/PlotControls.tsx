@@ -9,7 +9,7 @@ import { CurrentMapType } from '@/types/types';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getApiPath } from '@/utils/paths';
-
+import { LoadingCircle } from './LoadingCircle';
 interface PlotControlsProps {
     phase: number;
     currentMapData: CurrentMapType;
@@ -31,10 +31,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                 }
                 updatedCurrentMapData.map.content[props.row][props.column] = emojiType;
 
-                console.log("Updated Content Structure:", JSON.stringify(updatedCurrentMapData.map.content));
-
                 props.updateCurrentMap(updatedCurrentMapData as CurrentMapType);
-                console.log("updatedCurrentMapData", JSON.stringify(updatedCurrentMapData));
 
                 const requestBody = {
                     row: props.row,
@@ -104,13 +101,11 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
         }
     };
 
-    if (error) {
-        return <div>Error loading Metaverse</div>;
-    }
-
     return (
         <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md">
-            {error && <p className="text-red-500 text-center">{error}</p>}
+            {error && <p className="text-red-500 text-center">
+                {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
+            </p>}
             <div className="flex flex-col items-center space-y-4">
                 <div className="flex space-x-4">
                     <Input

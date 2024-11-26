@@ -6,7 +6,7 @@
 
 import { GoalMapType } from "@/types/types";
 
-export const goalMapData: GoalMapType = {
+export const goalMapDataPhaseOne: GoalMapType = {
     goal: [
         [
             "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE", "SPACE"
