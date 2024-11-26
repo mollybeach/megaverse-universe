@@ -21,13 +21,6 @@ const nextConfig = {
             };
         }
         return config;
-    },
-    // Add experimental features
-    experimental: {
-        // Enable edge runtime
-        runtime: 'edge',
-        // Disable server components for now
-        serverComponents: false,
     }
 }
 

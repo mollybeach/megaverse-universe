@@ -4,7 +4,7 @@ compatibility_date = "2023-12-01"
 compatibility_flags = ["nodejs_compat"]
 
 [build]
-command = "pnpm install && pnpm run build"
+command = "pnpm install && pnpm run pages:build"
 
 [build.upload]
 format = "modules"
@@ -14,6 +14,9 @@ bucket = ".vercel/output/static"
 
 [env.production]
 NODE_ENV = "production"
+
+[pages]
+pages_build_output_dir = ".vercel/output/static"
 
 [[build.upload.rules]]
 type = "ESModule"

@@ -11,15 +11,12 @@
     },
     "scripts": {
         "dev": "next dev",
-        "build": "next build && @cloudflare/next-on-pages --experimental-minify",
+        "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "go": "next build && next dev",
-        "predeploy": "npm run build",
-        "deploy": "gh-pages -d out",
-        "export": "next export",
-        "cloudflare:build": "npx @cloudflare/next-on-pages",
-        "pages:build": "next build && @cloudflare/next-on-pages --experimental-minify"
+        "cloudflare": "npx @cloudflare/next-on-pages",
+        "pages:build": "next build && npx @cloudflare/next-on-pages",
+        "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static"
     },
     "license": "MIT",
     "dependencies": {
@@ -51,7 +48,8 @@
         "wrangler": "^3.90.0"
     },
     "engines": {
-        "node": "18",
+        "node": "18.x",
         "pnpm": "8.7.1"
-    }
+    },
+    "packageManager": "pnpm@8.7.1"
 }
