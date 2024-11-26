@@ -17,7 +17,9 @@
         "go": "next build && next dev",
         "predeploy": "npm run build",
         "deploy": "gh-pages -d out",
-        "export": "next export"
+        "export": "next export",
+        "cloudflare:build": "npx @cloudflare/next-on-pages",
+        "pages:build": "npx @cloudflare/next-on-pages"
     },
     "license": "MIT",
     "dependencies": {
