@@ -9,15 +9,17 @@ const nextConfig = {
     },
     basePath: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '' : '',
     assetPrefix: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '' : '',
-    experimental: {
-        serverActions: true,
-    },
-    // Add Cloudflare specific configuration
     webpack: (config, { isServer }) => {
         if (!isServer) {
             config.resolve.fallback = {
                 ...config.resolve.fallback,
                 async_hooks: false,
+                fs: false,
+                net: false,
+                tls: false,
+                child_process: false,
+                async_hooks: false,
+                'next/dist/compiled/next-server/app-page': false
             };
         }
         return config;

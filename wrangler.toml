@@ -2,24 +2,24 @@ name = "megaverse-universe"
 
 [build]
 command = "pnpm install && pnpm run build"
+output_dir = ".vercel/output/static"
 
 [build.environment]
-NODE_VERSION = "18.17.1"
+NODE_VERSION = "18"
 PNPM_VERSION = "8.7.1"
-
-[build.processing]
-skip_source_maps = true
-
-[site]
-bucket = ".vercel/output/static"
-
-[env.production]
-NODE_ENV = "production"
 
 # Add these compatibility flags
 [compatibility_flags]
 nodejs_compat = true
 
-# Add specific build output configuration
-[build.upload]
-format = "service-worker"
+# Configure build processing
+[build.processing]
+skip_source_maps = true
+
+# Configure Pages
+[pages]
+fallback_service_worker = true
+
+# Configure site
+[site]
+bucket = ".vercel/output/static"
