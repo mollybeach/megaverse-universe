@@ -126,7 +126,6 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                 try {
                     let emojiType = '';
                     
-                    // Convert difference to emojiType
                     if (diff.type === 'POLYANET') {
                         emojiType = 'POLYANET';
                     } else if (diff.type === 'SOLOON') {
@@ -135,10 +134,8 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                         emojiType = `${diff.direction?.toUpperCase()}_COMETH`;
                     }
 
-                    // Use existing addEmoji function with modified row/column
                     await addEmoji(emojiType, diff.row, diff.column);
                     
-                    // Add delay between requests
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     
                 } catch (error) {
