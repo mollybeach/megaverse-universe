@@ -1,44 +1,22 @@
+const { setupDevPlatform } = require("@cloudflare/next-on-pages/next-dev");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'standalone',
-    webpack: (config, { isServer }) => {
-        if (!isServer) {
-            // Attempt to resolve Node.js specific modules
-            config.resolve = {
-                ...config.resolve,
-                fallback: {
-                    ...config.resolve.fallback,
-                    async_hooks: false,
-                    fs: false,
-                    net: false,
-                    tls: false,
-                    child_process: false,
-                },
-                alias: {
-                    ...config.resolve.alias,
-                    'async_hooks': false,
-                }
-            };
-        }
-
-        // Add specific rule for async_hooks
-        config.module = {
-            ...config.module,
-            rules: [
-                ...config.module.rules,
-                {
-                    test: /async_hooks/,
-                    use: 'null-loader'
-                }
-            ]
-        };
-
-        return config;
+    images: {
+        unoptimized: true,
+        domains: ['res.cloudinary.com'],
     },
-    // Explicitly set the platform
-    experimental: {
-        serverComponentsExternalPackages: ['async_hooks']
+    basePath: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '' : '',
+    assetPrefix: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '' : '',
+};
+
+if (process.env.NODE_ENV === "development") {
+    try {
+        setupDevPlatform();
+    } catch (e) {
+        console.warn("Failed to setup dev platform:", e);
     }
+
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;
