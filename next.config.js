@@ -20,7 +20,24 @@ const nextConfig = {
                 }
             };
         }
+
+        // Add specific rule for async_hooks
+        config.module = {
+            ...config.module,
+            rules: [
+                ...config.module.rules,
+                {
+                    test: /async_hooks/,
+                    use: 'null-loader'
+                }
+            ]
+        };
+
         return config;
+    },
+    // Explicitly set the platform
+    experimental: {
+        serverComponentsExternalPackages: ['async_hooks']
     }
 }
 

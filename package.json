@@ -11,11 +11,11 @@
     },
     "scripts": {
         "dev": "next dev",
-        "build": "next build",
+        "build": "NEXT_TELEMETRY_DISABLED=1 next build",
         "start": "next start",
         "lint": "next lint",
         "cloudflare": "npx @cloudflare/next-on-pages",
-        "pages:build": "next build && npx @cloudflare/next-on-pages",
+        "pages:build": "NEXT_TELEMETRY_DISABLED=1 next build && npx @cloudflare/next-on-pages --experimental-minify",
         "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static"
     },
     "license": "MIT",
@@ -30,7 +30,8 @@
         "next-themes": "^0.4.3",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "tailwind-merge": "^2.5.4"
+        "tailwind-merge": "^2.5.4",
+        "null-loader": "^4.0.1"
     },
     "devDependencies": {
         "@cloudflare/next-on-pages": "^1.13.5",
