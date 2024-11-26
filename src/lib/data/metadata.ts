@@ -5,9 +5,7 @@
  */
 
 import { HeaderNavItemsType } from "@/types/types";
-//import { BookOpen, Home, FileText, BarChart } from "lucide-react";
 
-// Define the emoji and SVG for the navigation items
 const SaturnEmoji = '🪐'; // Emoji for Megaverse
 //const ChallengeSVG = { src: 'https://res.cloudinary.com/storagemanagementcontainer/image/upload/v1732334298/portfolio/crossmint-logo_km22uh.svg', alt: 'Challenge Logo' }; // SVG for Challenge
 const ChallengeEmoji = '🏆'; // Emoji for Challenge
@@ -22,7 +20,7 @@ export const HeaderNavItems: HeaderNavItemsType[] = [
     { value: "map", icon: MapEmoji, label: "Map", external: "https://challenge.crossmint.com/map" },
 ];
 
-export const polyanetSolution = [
+export const phaseOneSolution = [
     [2, 2],
     [2, 8],
     [3, 3],
@@ -40,15 +38,3 @@ export const polyanetSolution = [
 
 export const isPhaseTwo = false;
 
-export const metaverseMap = {
-   'SPACE': '🌌',
-   'POLYANET': '🪐',
-   'RIGHT_COMETH': '☄️',
-   'UP_COMETH': '🔼',
-   'LEFT_COMETH': '⬅️',
-   'DOWN_COMETH': '🔽',
-   'WHITE_SOLOON': '⚪️',
-   'BLUE_SOLOON': '🔵',
-   'RED_SOLOON': '🔴',
-   'PURPLE_SOLOON': '🟣'
-}

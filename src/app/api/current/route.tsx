@@ -1,6 +1,7 @@
 /*
-* @title: API
+* @title: CURRENT MAP API
 * @path: /src/app/api/current/route.tsx
+* @description: This API is used to fetch the current map and to post and delete polyanets, soloons, and comeths to the current map.
 */
 import { NextResponse, NextRequest } from 'next/server';
 import {  setPhase } from '@/lib/state/phaseState';
@@ -132,10 +133,8 @@ export async function DELETE(request: NextRequest) {
         const body = await request.json();
         const { _id, content, candidateId, phase, __v, row, column } = body;
 
-        // Log the content to check its structure
         console.log("Content being sent:", JSON.stringify(content));
 
-        // Validate row and column
         if (row < 0 || column < 0 || !content[row] || !content[row][column]) {
             return NextResponse.json({ error: 'Invalid row or column' }, { status: 400 });
         }
@@ -167,7 +166,6 @@ export async function DELETE(request: NextRequest) {
             },
             body: JSON.stringify(apiBody)
         });
-       
         const responseData = await response.json(); // Parse the response as JSON
         console.log("Route.tsx: responseData", responseData);
 
