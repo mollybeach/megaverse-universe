@@ -1,25 +1,20 @@
 name = "megaverse-universe"
 
+compatibility_date = "2023-12-01"
+compatibility_flags = ["nodejs_compat"]
+
 [build]
 command = "pnpm install && pnpm run build"
-output_dir = ".vercel/output/static"
 
-[build.environment]
-NODE_VERSION = "18"
-PNPM_VERSION = "8.7.1"
+[build.upload]
+format = "modules"
 
-# Add these compatibility flags
-[compatibility_flags]
-nodejs_compat = true
-
-# Configure build processing
-[build.processing]
-skip_source_maps = true
-
-# Configure Pages
-[pages]
-fallback_service_worker = true
-
-# Configure site
 [site]
 bucket = ".vercel/output/static"
+
+[env.production]
+NODE_ENV = "production"
+
+[[build.upload.rules]]
+type = "ESModule"
+globs = ["**/*.js"]

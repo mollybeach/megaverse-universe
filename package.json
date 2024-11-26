@@ -11,7 +11,7 @@
     },
     "scripts": {
         "dev": "next dev",
-        "build": "next build",
+        "build": "next build && @cloudflare/next-on-pages --experimental-minify",
         "start": "next start",
         "lint": "next lint",
         "go": "next build && next dev",
@@ -19,7 +19,7 @@
         "deploy": "gh-pages -d out",
         "export": "next export",
         "cloudflare:build": "npx @cloudflare/next-on-pages",
-        "pages:build": "npx @cloudflare/next-on-pages"
+        "pages:build": "next build && @cloudflare/next-on-pages --experimental-minify"
     },
     "license": "MIT",
     "dependencies": {
