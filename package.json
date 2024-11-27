@@ -16,9 +16,9 @@
     "scripts": {
         "clean": "rm -rf .next cache",
         "dev": "next dev",
-        "build": "npm run clean && next build",
+        "build": "next build",
         "pages:build": "next build && npx @cloudflare/next-on-pages",
-        "vercel-build": "npm run clean && next build && node esbuild.config.mjs",
+        "vercel-build": "next build",
         "preview": "npm run pages:build && wrangler pages dev .next",
         "deploy": "npm run pages:build && wrangler pages deploy .next",
         "deploy:clean": "npm run clean && vercel --prod"
