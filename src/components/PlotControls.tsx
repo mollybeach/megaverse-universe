@@ -22,6 +22,7 @@ interface PlotControlsProps {
     updateCurrentMap: (newMap: CellType[][]) => void;
     row: number;
     column: number;
+    fetchCurrentMap: () => Promise<void>;
 }
 
 export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsProps) => {
@@ -81,19 +82,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 props.updateCurrentMap(updatedMap);
             }
 
-            const getCurrentMap = await fetch('/api/current', {
-                method: 'GET',
-                cache: 'no-store'
-            });
-            
-            if (getCurrentMap.ok) {
-                const latestMapData = await getCurrentMap.json();
-                if (latestMapData?.map?.content && Array.isArray(latestMapData.map.content)) {
-                    props.updateCurrentMap(latestMapData.map.content);
-                } else {
-                    console.error('Invalid map data structure:', latestMapData);
-                }
-            }
+            await props.fetchCurrentMap();
 
         } catch (error) {
             console.error('Error in addEmoji:', error);
@@ -151,19 +140,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 props.updateCurrentMap(updatedMap);
             }
 
-            const getCurrentMap = await fetch('/api/current', {
-                method: 'GET',
-                cache: 'no-store'
-            });
-            
-            if (getCurrentMap.ok) {
-                const latestMapData = await getCurrentMap.json();
-                if (latestMapData?.map?.content && Array.isArray(latestMapData.map.content)) {
-                    props.updateCurrentMap(latestMapData.map.content);
-                } else {
-                    console.error('Invalid map data structure:', latestMapData);
-                }
-            }
+            await props.fetchCurrentMap();
 
         } catch (error) {
             console.error('Error deleting Emoji:', error);

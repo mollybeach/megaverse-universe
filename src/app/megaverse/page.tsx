@@ -16,63 +16,22 @@ import { getApiPath } from '@/utils/paths';
 import { CellType } from '@/types/types';
 import { LoadingCircle } from '@/components/LoadingCircle';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { useMegaverseMaps } from '@/hooks/useMegaverseMaps';
 
 
 const Megaverse: React.FC = () => {
-    const [goalMapArray, setGoalMapArray] = useState<CellType[][]>([]);
-    const [currentMapArray, setCurrentMapArray] = useState<CellType[][]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [phase, setPhase] = useState<number | null>(0);
+    const {
+        goalMapArray,
+        currentMapArray,
+        setCurrentMapArray,
+        error,
+        loading,
+        phase
+    } = useMegaverseMaps();
+    
     const [row, setRow] = useState<number>(0);
     const [column, setColumn] = useState<number>(0);
 
-    useEffect(() => {
-        const fetchCurrentMapData = async () => {
-            try {
-                const response = await fetch('/api/current', {
-                    method: 'GET',
-                    cache: 'no-store',
-                    next: { revalidate: 0 }
-                });
-                const jsonData: CurrentMapType = await response.json();
-                setCurrentMapArray(jsonData.map.content);
-                setPhase(jsonData.map.phase);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status} JSON: ${JSON.stringify(jsonData)}`);
-                }
-                console.log("jsonData", jsonData)
-            } catch (_error) {
-                console.error('Error fetching current map data:', _error);
-                setError('Failed to fetch current map data.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchCurrentMapData();
-    }, []);
-
-    useEffect(() => {
-        const fetchGoalMap = async () => {
-            try {
-                const response = await fetch(getApiPath('goal'));
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const jsonData: GoalMapType = await response.json();
-                setGoalMapArray(jsonData.goal);
-                jsonData.goal.length > 13 ? setPhase(2) : setPhase(1);
-            } catch (error) {
-                console.error('Error fetching goal map data:', error);
-                setError('Failed to fetch goal map data.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchGoalMap();
-    }, []);
     const cardsData = [
         {
             title: "Goal Map",
@@ -108,6 +67,7 @@ const Megaverse: React.FC = () => {
                             row={row} 
                             column={column} 
                             goalMap={goalMapArray}
+                            fetchCurrentMap={async () => {}}
                         />
                     </ErrorBoundary>
                 </div>
