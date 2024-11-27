@@ -20,8 +20,14 @@ export const useMegaverseMaps = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const jsonData: CurrentMapType = await response.json();
-            setCurrentMapArray([...jsonData.map.content.map(row => [...row])]);
-            setPhase(jsonData.map.phase);
+            
+            if (jsonData?.map?.content && Array.isArray(jsonData.map.content)) {
+                setCurrentMapArray([...jsonData.map.content.map(row => [...row])]);
+                setPhase(jsonData.map.phase);
+            } else {
+                console.error('Unexpected API response structure:', jsonData);
+                throw new Error('Invalid map data structure received from API');
+            }
         } catch (error) {
             console.error('Error fetching current map:', error);
             setError('Failed to fetch current map data.');
