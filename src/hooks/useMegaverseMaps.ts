@@ -16,11 +16,11 @@ export const useMegaverseMaps = () => {
                 cache: 'no-store',
                 next: { revalidate: 0 }
             });
-            const jsonData: CurrentMapType = await response.json();
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            setCurrentMapArray(jsonData.map.content);
+            const jsonData: CurrentMapType = await response.json();
+            setCurrentMapArray([...jsonData.map.content.map(row => [...row])]);
             setPhase(jsonData.map.phase);
         } catch (error) {
             console.error('Error fetching current map:', error);
@@ -36,7 +36,7 @@ export const useMegaverseMaps = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const jsonData: GoalMapType = await response.json();
-            setGoalMapArray(jsonData.goal);
+            setGoalMapArray([...jsonData.goal.map(row => [...row])]);
             jsonData.goal.length > 13 ? setPhase(2) : setPhase(1);
         } catch (error) {
             console.error('Error fetching goal map:', error);

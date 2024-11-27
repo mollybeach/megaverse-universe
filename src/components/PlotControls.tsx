@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { LoadingCircle } from './LoadingCircle';
 import { compareMapWithGoal } from '@/utils/mapComparator';
 import { validateMap } from '@/utils/mapValidation';
-import { CellType } from '@/types/types';
 import ErrorBoundary from './ErrorBoundary';
 import SunLoadingCircle from './SunLoadingCircle';
 import { getSpaceErrorMessage } from '@/utils/spaceErrorMessage';
@@ -61,7 +60,8 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+            const data = await response.json();
+            updateCurrentMap([...data.map]);
             await fetchCurrentMap();
             
             setSuccess(`Successfully added ${emojiType} at position [${row}, ${column}]`);
@@ -96,7 +96,8 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+            const data = await response.json();
+            updateCurrentMap([...data.map]);
             // First fetch the updated map
             await fetchCurrentMap();
             
