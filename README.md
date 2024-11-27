@@ -3,6 +3,9 @@
 🌌 **Welcome to the Megaverse!** 🌌  
 This project is a React-based application that solves Crossmint's coding challenge to mint a new "Megaverse" into existence. Using a RESTful API, the app creates an X-shaped pattern of 🪐POLYanets in a 2D astral grid, showcasing automation, clean coding practices, and resilience.
 
+## Live Demo
+[Megaverse Universe](https://megaverse-universe.vercel.app/)
+
 ## Table of Contents
 - [Features](#features)
 - [Tech Stack](#tech-stack)

@@ -2,7 +2,7 @@
     "name": "megaverse-universe",
     "version": "0.1.0",
     "description": "A React-based application that creates a new 'Megaverse' by minting an X-shaped pattern of POLYanets using a RESTful API.",
-    "homepage": "https://mollybeach.github.io/megaverse-universe",
+    "homepage": "https://megaverse-universe.vercel.app/",
     "author": "mollybeach",
     "private": false,
     "repository": {

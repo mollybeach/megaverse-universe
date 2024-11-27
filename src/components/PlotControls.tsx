@@ -13,6 +13,7 @@ import { compareMapWithGoal } from '@/utils/mapComparator';
 import { validateMap } from '@/utils/mapValidation';
 import { CellType } from '@/types/types';
 import ErrorBoundary from './ErrorBoundary';
+import SunLoadingCircle from './SunLoadingCircle';
 
 interface PlotControlsProps {
     phase: number | null;
@@ -26,6 +27,7 @@ interface PlotControlsProps {
 export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsProps) => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleValidation = () => {
         const { isValid, errors } = validateMap(props.currentMap, props.goalMap);
@@ -41,6 +43,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
         try {
             setError(null);
             setSuccess(null);
+            setIsLoading(true);
             
             console.log('Attempting to add emoji:', { row, column, emojiType });
 
@@ -95,12 +98,18 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
         } catch (error) {
             console.error('Error in addEmoji:', error);
             setError(error instanceof Error ? error.message : 'Failed to add emoji');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleDeleteEmoji = async ({emojiType}: {emojiType: string}) => {
         console.log("deleteEmoji", props.row, props.column);
         try {
+            setIsLoading(true);
+            setError(null);
+            setSuccess(null);
+
             const updatedMap = props.currentMap.map(row => [...row]);
             updatedMap[props.row][props.column] = 'SPACE';
             props.updateCurrentMap(updatedMap);
@@ -130,12 +139,16 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
         } catch (error) {
             console.error('Error deleting Emoji:', error);
             setError('Failed to delete Emoji.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleAutoSync = async () => {
         try {
+            setIsLoading(true);
             setError(null);
+            setSuccess(null);
             
             const currentMap = props.currentMap.map(row => [...row]);
             const differences = compareMapWithGoal(currentMap, props.goalMap as string[][]);
@@ -160,6 +173,8 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             }
         } catch (error) {
             setError('Failed to auto-sync with goal map');
+        } finally {
+            setIsLoading(false);
         }
     };
     
@@ -168,9 +183,6 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md">
                 {error && <div className="text-red-500 text-center mb-4">
                     {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
-                </div>}
-                {success && <div className="text-green-500 text-center mb-4 font-semibold">
-                    {success}
                 </div>}
                 <div className="flex flex-col items-center space-y-4">
                     <div className="text-xl font-bold bg-gradient-to-r text-white text-transparent bg-clip-text">
@@ -268,6 +280,18 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 >
                     Auto-Sync with Goal Map 🚀
                 </Button>
+                <div className="text-center mt-4">
+                    {isLoading ? (
+                        <SunLoadingCircle 
+                            size="lg" 
+                            message="Posting to Metaverse..."
+                        />
+                    ) : success ? (
+                        <div className="text-green-500 font-semibold">
+                            {success}
+                        </div>
+                    ) : null}
+                </div>
             </div>
         </ErrorBoundary>
     );
