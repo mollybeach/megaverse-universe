@@ -10,7 +10,8 @@
         "url": "https://github.com/mollybeach/megaverse-universe.git"
     },
     "engines": {
-        "node": "20"
+        "node": "20.x",
+        "pnpm": ">=8.7.1"
     },
     "scripts": {
         "clean": "rm -rf .next cache",
