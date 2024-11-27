@@ -8,6 +8,15 @@ const nextConfig = {
     },
     basePath: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '' : '',
     assetPrefix: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '' : '',
+    webpack: (config, { isServer }) => {
+        if (!isServer) {
+            config.resolve.fallback = {
+                ...config.resolve.fallback,
+                async_hooks: false,
+            };
+        }
+        return config;
+    },
 };
 
 if (process.env.NEXT_PUBLIC_NODE_ENV === "development") {
