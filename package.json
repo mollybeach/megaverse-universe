@@ -16,7 +16,7 @@
     "scripts": {
         "clean": "rm -rf .next cache",
         "dev": "next dev",
-        "build": "npm run clean && next build --bundle --platform=node --external:async_hooks --external:next --external:react",
+        "build": "npm run clean && next build",
         "pages:build": "next build && npx @cloudflare/next-on-pages",
         "vercel-build": "next build && node esbuild.config.js",
         "preview": "npm run pages:build && wrangler pages dev .next",
