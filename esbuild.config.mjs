@@ -11,6 +11,12 @@ esbuild.build({
         'next',
         'react',
         'react-dom',
+        'node:async_hooks',
+        'node:*'
     ],
     outfile: '.next/server/app/page.js',
+    define: {
+        'process.env.NODE_ENV': '"production"'
+    },
+    allowOverwrite: true,
 }).catch(() => process.exit(1))
