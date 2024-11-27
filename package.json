@@ -2,22 +2,24 @@
     "name": "megaverse-universe",
     "version": "0.1.0",
     "description": "A React-based application that creates a new 'Megaverse' by minting an X-shaped pattern of POLYanets using a RESTful API.",
-    "homepage": "https://mollybeach.github.io/megaverse-universe",
+    "homepage": "https: //megaverse-universe.pages.dev/",
     "author": "mollybeach",
     "private": false,
     "repository": {
         "type": "git",
         "url": "https://github.com/mollybeach/megaverse-universe.git"
     },
+    "engines": {
+        "node": "20"
+    },
     "scripts": {
+        "clean": "rm -rf .next cache",
         "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint",
-        "go": "next build && next dev",
-        "predeploy": "npm run build",
-        "deploy": "gh-pages -d out",
-        "export": "next export"
+        "build": "npm run clean && next build",
+        "pages:build": "npm run clean && npx @cloudflare/next-on-pages",
+        "preview": "npm run pages:build && wrangler pages dev .next",
+        "deploy": "npm run pages:build && wrangler pages deploy .next",
+        "deploy:clean": "npm run clean && vercel --prod"
     },
     "license": "MIT",
     "dependencies": {
@@ -31,13 +33,14 @@
         "next-themes": "^0.4.3",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "tailwind-merge": "^2.5.4"
+        "tailwind-merge": "^2.5.4",
+        "zustand": "^5.0.1"
     },
     "devDependencies": {
         "@cloudflare/next-on-pages": "^1.13.5",
-        "@types/node": "^20",
+        "@types/node": "^20.17.8",
         "@types/react": "^18",
-        "@types/react-dom": "^18",
+        "@types/react-dom": "^18.3.1",
         "autoprefixer": "^10.4.20",
         "eslint": "^8",
         "eslint-config-next": "14.0.4",

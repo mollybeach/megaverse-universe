@@ -7,7 +7,6 @@ import { NextResponse, NextRequest } from 'next/server';
 import {  setPhase } from '@/lib/state/phaseState';
 
 export const dynamic = 'force-dynamic';
-//export const runtime = process.env.NODE_ENV === 'production' ? 'edge' : 'nodejs'
 export const runtime = 'edge';
 export const revalidate = 0;
 
@@ -57,6 +56,7 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { row, column, emojiType } = body;
 
+        // Parse emojiType
         let urlParam: string;
         let direction: string | null = null;
         let color: string | null = null;
@@ -127,7 +127,6 @@ export async function POST(request: Request) {
         }, { status: 500 });
     }
 }
-
 export async function DELETE(request: NextRequest) { 
     try {
         const body = await request.json();

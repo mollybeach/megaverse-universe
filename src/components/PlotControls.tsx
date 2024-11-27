@@ -54,6 +54,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                 });
 
                 const responseData = await response.json();
+                console.log("responseData", responseData);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -152,9 +153,9 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
 
     return (
         <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md">
-            {error && <p className="text-red-500 text-center">
+            {error && <div className="text-red-500 text-center">
                 {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
-            </p>}
+            </div>}
             <div className="flex flex-col items-center space-y-4">
                 <div className="flex space-x-4">
                     <Input
@@ -230,8 +231,6 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                                 ☄️
                             </span>
                         </Button>
-                        
-                       
                     </div>
                 )}
                 <Button 
@@ -246,5 +245,3 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
 };
 
 export default PlotControls;
-
-  
