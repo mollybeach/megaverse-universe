@@ -23,9 +23,13 @@ interface PlotControlsProps {
 
 export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsProps) => {
     const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
 
     const addEmoji = async (row: number, column: number, emojiType: string) => {
         try {
+            setError(null);
+            setSuccess(null);
+            
             console.log('Attempting to add emoji:', { row, column, emojiType });
 
             const response = await fetch('/api/current', {
@@ -46,6 +50,33 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 throw new Error(`HTTP error! status: ${response.status}, details: ${JSON.stringify(errorData)}`);
             }
 
+            // Update the local state immediately
+            const updatedCurrentMapData = { ...props.currentMapData };
+            if (updatedCurrentMapData.map.content) {
+                updatedCurrentMapData.map.content[row][column] = emojiType;
+                props.updateCurrentMap(updatedCurrentMapData as CurrentMapType);
+            }
+
+            // Show success message
+            setSuccess(`Successfully added ${emojiType} at position [${row}, ${column}]`);
+            
+            // Clear success message after 3 seconds
+            setTimeout(() => {
+                setSuccess(null);
+            }, 3000);
+
+            // Fetch the latest map data to ensure consistency
+            const getCurrentMap = await fetch('/api/current', {
+                method: 'GET',
+                cache: 'no-store',
+                next: { revalidate: 0 }
+            });
+            
+            if (getCurrentMap.ok) {
+                const latestMapData = await getCurrentMap.json();
+                props.updateCurrentMap(latestMapData);
+            }
+
             const responseData = await response.json();
             console.log('Success response:', responseData);
             return responseData;
@@ -55,6 +86,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 error,
                 stack: error instanceof Error ? error.stack : undefined
             });
+            setError(error instanceof Error ? error.message : 'Failed to add emoji');
             throw error;
         }
     };
@@ -145,8 +177,11 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
 
     return (
         <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md">
-            {error && <div className="text-red-500 text-center">
+            {error && <div className="text-red-500 text-center mb-4">
                 {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
+            </div>}
+            {success && <div className="text-green-500 text-center mb-4">
+                {success}
             </div>}
             <div className="flex flex-col items-center space-y-4">
                 <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
