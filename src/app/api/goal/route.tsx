@@ -7,6 +7,10 @@
 import { NextResponse } from 'next/server';
 import { setPhase } from '@/lib/state/phaseState';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
+export const revalidate = 0;
+
 export async function GET() {
     try {
         const response = await fetch(process.env.NEXT_PUBLIC_GOAL_MAP!,{
