@@ -4,9 +4,10 @@
 * @description: This API is used to fetch the current map and to post and delete polyanets, soloons, and comeths to the current map.
 */
 import { NextResponse, NextRequest } from 'next/server';
-import {  setPhase } from '@/lib/state/phaseState';
-export const dynamic = 'force-dynamic';
+//import {  setPhase } from '@/lib/state/phaseState';
+
 export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 interface Payload {
     candidateId: string | undefined;
