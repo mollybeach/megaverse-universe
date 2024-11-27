@@ -13,7 +13,7 @@ export function LoadingCircle(props: LoadingCircleProps) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setRotation((prevRotation) => prevRotation - 1);
+      setRotation((prevRotation: number) => prevRotation - 1);
     }, 50);
 
     return () => clearInterval(interval);
