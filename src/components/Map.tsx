@@ -19,7 +19,6 @@ const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }: MapProps) => {
     const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
     const [isLocked, setIsLocked] = useState(false);
 
-    // Add global click listener to reset state
     useEffect(() => {
         const handleGlobalClick = (e: MouseEvent) => {
             const target = e.target as HTMLElement;

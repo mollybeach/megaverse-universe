@@ -61,21 +61,23 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 });
                 throw new Error(`HTTP error! status: ${response.status}, details: ${JSON.stringify(errorData)}`);
             }
+            setSuccess(`Successfully added ${emojiType} at position [${row}, ${column}]`);
+            
+            setTimeout(() => {
+                setSuccess(null);
+            }, 3000);
 
-            // Update the local state immediately
-            const updatedMap = [...props.currentMap]; // Create a proper copy
+            const updatedMap = [...props.currentMap]; 
             if (!Array.isArray(updatedMap)) {
                 console.error('Current map is not an array:', updatedMap);
                 return;
             }
             
-            // Ensure we're working with a valid 2D array
             if (updatedMap[row] && Array.isArray(updatedMap[row])) {
                 updatedMap[row][column] = emojiType;
                 props.updateCurrentMap(updatedMap);
             }
 
-            // If you need to fetch updated data
             const getCurrentMap = await fetch('/api/current', {
                 method: 'GET',
                 cache: 'no-store'
@@ -83,7 +85,6 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             
             if (getCurrentMap.ok) {
                 const latestMapData = await getCurrentMap.json();
-                // Ensure we're getting the correct structure
                 if (latestMapData?.map?.content && Array.isArray(latestMapData.map.content)) {
                     props.updateCurrentMap(latestMapData.map.content);
                 } else {
@@ -167,6 +168,9 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md">
                 {error && <div className="text-red-500 text-center mb-4">
                     {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
+                </div>}
+                {success && <div className="text-green-500 text-center mb-4 font-semibold">
+                    {success}
                 </div>}
                 <div className="flex flex-col items-center space-y-4">
                     <div className="text-xl font-bold bg-gradient-to-r text-white text-transparent bg-clip-text">
@@ -258,16 +262,12 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                         </div>
                     )}
                 </div>
-        
                 <Button 
                     onClick={handleAutoSync}
                     className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200 mt-4"
                 >
                     Auto-Sync with Goal Map 🚀
                 </Button>
-                {success && <div className="text-green-500 text-center mb-4 z-index-10">
-                    {success}
-                </div>}
             </div>
         </ErrorBoundary>
     );
