@@ -33,13 +33,23 @@ const Megaverse: React.FC = () => {
             title: "Goal Map",
             icon: Network,
             color: "green",
-            content: <Map mapArray={goalMapArray || []}  setRow={setRow} setColumn={setColumn} />
+            content: <Map 
+                key={`goal-map-${JSON.stringify(goalMapArray)}`} 
+                mapArray={goalMapArray || []} 
+                setRow={setRow} 
+                setColumn={setColumn} 
+            />
         },
         {
             title: "Current Map",
             icon: Network,
             color: "blue",
-            content: <Map mapArray={currentMapArray || []}  setRow={setRow} setColumn={setColumn}/>
+            content: <Map 
+                key={`current-map-${JSON.stringify(currentMapArray)}`} 
+                mapArray={currentMapArray || []} 
+                setRow={setRow} 
+                setColumn={setColumn}
+            />
         },
     ];
 

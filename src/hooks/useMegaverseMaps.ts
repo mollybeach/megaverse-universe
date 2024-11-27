@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CellType, GoalMapType, CurrentMapType } from '@/types/types';
 import { getApiPath } from '@/utils/paths';
 
@@ -8,32 +8,36 @@ export const useMegaverseMaps = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [phase, setPhase] = useState<number | null>(0);
+    const [retryCount, setRetryCount] = useState(0);
 
-    const fetchCurrentMap = async () => {
+    const fetchCurrentMap = useCallback(async () => {
+        if (retryCount > 3) {
+            setError('Too many failed attempts. Please refresh the page.');
+            return;
+        }
+
         try {
             const response = await fetch('/api/current', {
                 method: 'GET',
                 cache: 'no-store',
                 next: { revalidate: 0 }
             });
+            
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const jsonData: CurrentMapType = await response.json();
             
-            if (jsonData?.map?.content && Array.isArray(jsonData.map.content)) {
-                setCurrentMapArray([...jsonData.map.content.map(row => [...row])]);
-                setPhase(jsonData.map.phase);
-            } else {
-                console.error('Unexpected API response structure:', jsonData);
-                throw new Error('Invalid map data structure received from API');
-            }
+            const jsonData: CurrentMapType = await response.json();
+            setCurrentMapArray(jsonData.map.content);
+            setPhase(jsonData.map.phase);
+            setError(null);
+            setRetryCount(0);
         } catch (error) {
             console.error('Error fetching current map:', error);
+            setRetryCount(prev => prev + 1);
             setError('Failed to fetch current map data.');
-            throw error;
         }
-    };
+    }, [retryCount]);
 
     const fetchGoalMap = async () => {
         try {
@@ -42,7 +46,7 @@ export const useMegaverseMaps = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const jsonData: GoalMapType = await response.json();
-            setGoalMapArray([...jsonData.goal.map(row => [...row])]);
+            setGoalMapArray(jsonData.goal);
             jsonData.goal.length > 13 ? setPhase(2) : setPhase(1);
         } catch (error) {
             console.error('Error fetching goal map:', error);
@@ -65,14 +69,24 @@ export const useMegaverseMaps = () => {
         fetchMaps();
     }, []);
 
+    useEffect(() => {
+        if (!error && !loading) {
+            const interval = setInterval(fetchCurrentMap, 5000);
+            return () => clearInterval(interval);
+        }
+    }, [error, loading, fetchCurrentMap]);
+
     return {
         goalMapArray,
         currentMapArray,
-        setCurrentMapArray,
+        setCurrentMapArray: (newMap: CellType[][]) => {
+            setCurrentMapArray(newMap);
+            setError(null);
+            setRetryCount(0);
+        },
         error,
         loading,
         phase,
-        fetchCurrentMap,
-        fetchGoalMap
+        fetchCurrentMap
     };
 };

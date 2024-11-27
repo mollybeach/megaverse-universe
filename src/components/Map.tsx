@@ -4,7 +4,7 @@
 * @description: Component to display the current megaverse map
 */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { RowType, CellType } from '@/types/types';
 import { LoadingCircle } from './LoadingCircle';
 import ErrorBoundary from './ErrorBoundary';
@@ -15,7 +15,7 @@ interface MapProps {
     setColumn: (column: number) => void;
 }
 
-const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }: MapProps) => {
+const Map: React.FC<MapProps> = memo(({ mapArray, setRow, setColumn }: MapProps) => {
     const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
     const [isLocked, setIsLocked] = useState(false);
 
@@ -153,7 +153,7 @@ const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }: MapProps) => {
             </div>
         </ErrorBoundary>
     );
-};
+});
 
 export default Map;
 

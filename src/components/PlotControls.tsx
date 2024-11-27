@@ -27,14 +27,14 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const {
-        currentMapArray: currentMap,
-        goalMapArray: goalMap,
-        setCurrentMapArray: updateCurrentMap,
+        currentMapArray,
+        goalMapArray,
+        setCurrentMapArray,
         fetchCurrentMap
     } = useMegaverseMaps();
 
     const handleValidation = () => {
-        const { isValid, errors } = validateMap(currentMap, goalMap);
+        const { isValid, errors } = validateMap(currentMapArray, goalMapArray);
         
         if (isValid) {
             alert('Congratulations! Your solution matches the goal map! 🎉');
@@ -45,10 +45,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
 
     const addEmoji = async (row: number, column: number, emojiType: string) => {
         try {
-            setError(null);
-            setSuccess(null);
             setIsLoading(true);
-            
             const response = await fetch('/api/current', {
                 method: 'POST',
                 headers: {
@@ -60,18 +57,19 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+            
             const data = await response.json();
-            updateCurrentMap([...data.map]);
-            await fetchCurrentMap();
+            const newMap = data.map.content.map((row: any[]) => [...row]);
+            setCurrentMapArray(newMap);
             
             setSuccess(`Successfully added ${emojiType} at position [${row}, ${column}]`);
-            setTimeout(() => setSuccess(null), 3000);
-
         } catch (error) {
             console.error('Error in addEmoji:', error);
             setError(getSpaceErrorMessage('add'));
         } finally {
-            setIsLoading(false);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 2000);
         }
     };
 
@@ -97,7 +95,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            updateCurrentMap([...data.map]);
+            setCurrentMapArray([...data.map.content]);
             // First fetch the updated map
             await fetchCurrentMap();
             
@@ -108,7 +106,9 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             console.error('Error deleting Emoji:', error);
             setError(getSpaceErrorMessage('delete'));
         } finally {
-            setIsLoading(false);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 2000); 
         }
     };
 
@@ -118,8 +118,8 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             setError(null);
             setSuccess(null);
             
-            const mapCopy = currentMap.map(row => [...row]);
-            const differences = compareMapWithGoal(mapCopy, goalMap as string[][]);
+            const mapCopy = currentMapArray.map(row => [...row]);
+            const differences = compareMapWithGoal(mapCopy, goalMapArray as string[][]);
             for (const diff of differences) {
                 try {
                     let emojiType = '';
