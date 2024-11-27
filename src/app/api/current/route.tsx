@@ -5,10 +5,15 @@
 */
 import { NextResponse, NextRequest } from 'next/server';
 import {  setPhase } from '@/lib/state/phaseState';
-
-export const dynamic = 'force-dynamic';
-export const runtime = 'edge';
-export const revalidate = 0;
+export const runtime = 'nodejs';
+//export const runtime = 'edge';
+interface Payload {
+    candidateId: string | undefined;
+    row: number;
+    column: number;
+    color?: string;
+    direction?: string;
+}
 
 export async function GET() {
     try {
@@ -51,81 +56,62 @@ export async function GET() {
     }
 }
 
+
 export async function POST(request: Request) {
     try {
         const body = await request.json();
         const { row, column, emojiType } = body;
 
-        // Parse emojiType
-        let urlParam: string;
-        let direction: string | null = null;
-        let color: string | null = null;
-
-        if (emojiType === 'POLYANET') {
-            urlParam = 'polyanets';
-        } else if (emojiType.includes('SOLOON')) {
-            urlParam = 'soloons';
-            color = emojiType.split('_')[0].toLowerCase();
-        } else if (emojiType.includes('COMETH')) {
-            urlParam = 'comeths';
-            direction = emojiType.split('_')[0].toLowerCase();
-        } else {
-            return NextResponse.json({
-                error: 'Invalid emojiType',
-                details: { emojiType }
-            }, { status: 400 });
-        }
-
-        const baseUrl = 'https://challenge.crossmint.io/api';
-        const endpoint = `${baseUrl}/${urlParam}`;
-
-        const requestBody = {
+        let entityType = 'polyanets';
+        const payload: Payload = {
             candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
             row,
-            column,
-            ...(color && { color }), 
-            ...(direction && { direction })
+            column
         };
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestBody)
-        });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            return NextResponse.json({
-                error: 'Request failed',
-                details: {
-                    message: 'API request failed',
-                    status: response.status,
-                    statusText: response.statusText,
-                    responseBody: errorText,
-                    requestDetails: {
-                        endpoint,
-                        body: requestBody
-                    }
-                }
-            }, { status: 500 });
+        if (emojiType.includes('SOLOON')) {
+            entityType = 'soloons';
+            payload.color = emojiType.split('_')[0].toLowerCase();
+        } else if (emojiType.includes('COMETH')) {
+            entityType = 'comeths';
+            payload.direction = emojiType.split('_')[0].toLowerCase();
         }
 
-        return NextResponse.json({ success: true }, { status: 200 });
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '');
+        const endpoint = `${baseUrl}/${entityType}`;
+        
+        console.log('Making request to:', endpoint);
+        console.log('With payload:', payload);
+
+        // Try with explicit headers and no transformations
+        const rawResponse = await fetch(endpoint, {
+            method: 'POST',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }),
+            body: JSON.stringify(payload),
+            mode: 'cors',
+            credentials: 'omit'
+        });
+
+        if (!rawResponse.ok) {
+            const errorData = await rawResponse.json();
+            return NextResponse.json({ error: errorData }, { status: rawResponse.status });
+        }
+
+        const data = await rawResponse.json();
+        return NextResponse.json(data);
 
     } catch (error) {
-        console.error('POST error:', error);
-        return NextResponse.json({
-            error: 'Request failed',
-            details: {
-                message: error instanceof Error ? error.message : String(error),
-                type: error instanceof Error ? error.name : 'Unknown',
-                stack: error instanceof Error ? error.stack : undefined,
-                timestamp: new Date().toISOString()
-            }
-        }, { status: 500 });
+        console.error('Error in API route:', error);
+        return NextResponse.json(
+            { error: 'Internal Server Error', details: error instanceof Error ? error.message : String(error) },
+            { status: 500 }
+        );
     }
 }
+
 export async function DELETE(request: NextRequest) { 
     try {
         const body = await request.json();

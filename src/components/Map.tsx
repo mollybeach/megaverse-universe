@@ -7,18 +7,30 @@
 import React from 'react';
 import { RowType, CellType } from '@/types/types';
 import { LoadingCircle } from './LoadingCircle';
+import { validateMap } from '@/utils/mapValidation';
 
 interface MapProps {
     mapArray: CellType[][];
     setRow: (row: number) => void;
     setColumn: (column: number) => void;
+    goalMap?: CellType[][];
 }
 
-const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }: MapProps) => {
+const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn, goalMap }: MapProps) => {
 
     const handleEmojiClick = (rowIndex: number, cellIndex: number) => {
         setRow(rowIndex);
         setColumn(cellIndex);
+    };
+
+    const handleValidation = () => {
+        const { isValid, errors } = validateMap(mapArray, goalMap);
+        
+        if (isValid) {
+            alert('Congratulations! Your solution matches the goal map! 🎉');
+        } else {
+            alert(`Solution is not correct yet.\nFound ${errors.length} mismatches.`);
+        }
     };
 
     if (!mapArray || mapArray.length === 0) {
@@ -100,7 +112,12 @@ const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }: MapProps) => {
                     ))}
                 </div>
                 <div className="mt-5">
-                    <button className="bg-cyan-400 p-3 rounded text-white">Validate solution</button>
+                    <button 
+                        onClick={handleValidation}
+                        className="bg-cyan-400 p-3 rounded text-white hover:bg-cyan-500 transition-colors"
+                    >
+                        Validate solution
+                    </button>
                 </div>
             </div>
         </div>
