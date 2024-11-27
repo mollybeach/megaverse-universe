@@ -180,9 +180,11 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             {error && <div className="text-red-500 text-center mb-4">
                 {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
             </div>}
-            {success && <div className="text-green-500 text-center mb-4">
-                {success}
-            </div>}
+            {success && (
+                <div className="fixed top-4 left-1/2 transform -translate-x-1/2 text-green-500 text-center mb-4 p-2 bg-green-50 border border-green-200 rounded-md shadow-lg z-50">
+                    ✅ {success}
+                </div>
+            )}
             <div className="flex flex-col items-center space-y-4">
                 <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
                     Set Row and Column
