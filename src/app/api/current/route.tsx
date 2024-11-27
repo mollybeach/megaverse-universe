@@ -8,7 +8,7 @@ import { NextResponse, NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
-export const revalidate = 60;
+export const revalidate = 0;
 interface Payload {
     candidateId: string | undefined;
     row: number;

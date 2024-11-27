@@ -6,11 +6,10 @@
 
 import { NextResponse } from 'next/server';
 //import { setPhase } from '@/lib/state/phaseState';
-export const runtime = 'edge';
-//export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
 
-export const revalidate = 60;
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 const setPhase = (phase: number) => {
     console.log("phase", phase);
