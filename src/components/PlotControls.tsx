@@ -192,9 +192,6 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             {error && <div className="text-red-500 text-center mb-4">
                 {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
             </div>}
-            {success && <div className="text-green-500 text-center mb-4 z-index-10">
-                {success}
-            </div>}
             <div className="flex flex-col items-center space-y-4">
                 <div className="text-xl font-bold bg-gradient-to-r text-white text-transparent bg-clip-text">
                     To Set Row & Column:  Hover Over Map
@@ -292,6 +289,9 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 >
                     Auto-Sync with Goal Map 🚀
                 </Button>
+                {success && <div className="text-green-500 text-center mb-4 z-index-10">
+                {success}
+            </div>}
             </div>
     );
 };
