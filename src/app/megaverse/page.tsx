@@ -12,11 +12,18 @@ import Map from '@/components/Map';
 import { GoalMapType } from '@/types/types';
 import { CurrentMapType } from '@/types/types';
 import { PlotControls } from '@/components/PlotControls';
-import { getPhase, setPhase } from '@/lib/state/phaseState';
+//import { getPhase, setPhase } from '@/lib/state/phaseState';
 import { getApiPath } from '@/utils/paths';
 import { CellType } from '@/types/types';
 import { LoadingCircle } from '@/components/LoadingCircle';
 
+const getPhase = () => {
+    return 2;
+}
+
+const setPhase = (phase: number) => {
+    return phase;
+}
 const Megaverse: React.FC = () => {
     const [goalMapData, setGoalMapData] = useState<GoalMapType | null>(null);
     const [currentMapData, setCurrentMapData] = useState<CurrentMapType | null>(null);
@@ -36,10 +43,10 @@ const Megaverse: React.FC = () => {
                 });
                 const jsonData: CurrentMapType = await response.json();
                 setCurrentMapData(jsonData);
-                if (jsonData.map._id === process.env.NEXT_PUBLIC_PHASE_TWO_ID) {
+               /* if (jsonData.map._id === process.env.NEXT_PUBLIC_PHASE_TWO_ID) {
                     setPhase(2);
                 }
-                
+                */
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status} JSON: ${JSON.stringify(jsonData)}`);
                 }
@@ -76,7 +83,7 @@ const Megaverse: React.FC = () => {
     }, []);
     const currentMapArray : CellType[][] = currentMapData?.map.content || [];
     const goalMapArray : CellType[][] = goalMapData?.goal || [];
-    console.log("phase", getPhase())
+   // console.log("phase", getPhase())
     const cardsData = [
         {
             title: "Goal Map",

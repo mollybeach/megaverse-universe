@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+/*import { create } from 'zustand'
 
 interface PhaseState {
     phase: number
@@ -12,4 +12,4 @@ export const usePhaseStore = create<PhaseState>((set) => ({
 
 // Export these for non-React contexts
 export const getPhase = () => usePhaseStore.getState().phase
-export const setPhase = (phase: number) => usePhaseStore.getState().setPhase(phase)
+export const setPhase = (phase: number) => usePhaseStore.getState().setPhase(phase)*/
