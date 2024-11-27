@@ -6,7 +6,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import {  setPhase } from '@/lib/state/phaseState';
 //export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+//export const dynamic = 'force-dynamic';
 export const runtime = 'edge';
 export const revalidate = 60;
 interface Payload {
