@@ -6,8 +6,7 @@
 
 import { LucideIcon } from "lucide-react";
 
-
-  export type HeaderNavItemsType = {
+export type HeaderNavItemsType = {
     value: string;
     icon: LucideIcon | string | { src: string; alt: string };
     label: string;
@@ -48,20 +47,6 @@ export type ComethTypeCellType ={
     column: number;
     direction: "up" | "down" | "right" | "left";
 }
-
-export type ApiBodyType = {
-    _id: string | null;
-    content: CellType[][];
-    candidateId: string | null;
-    phase: number | null;
-    __v: number | null;
-    row?: number; // Optional properties
-    column?: number; // Optional properties
-    color?: "blue" | "red" | "purple" | "white" | string; // Optional for Soloon
-    direction?: "up" | "down" | "right" | "left" | string; // Optional for Cometh
-}
-
-//& (PolyanetTypeCellType | SoloonTypeCellType | ComethTypeCellType) | null;
 
 export const cellTypes = [
     {"type": 0},

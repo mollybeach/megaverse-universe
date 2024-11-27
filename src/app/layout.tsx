@@ -9,6 +9,7 @@ import localFont from "next/font/local";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,14 +34,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-     <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-black dark:text-white`}>
-        <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
-          <Header />
-          <main className="p-8">
-            {children}
-          </main>
-          <Footer />
-        </div>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-black dark:text-white`}>
+        <ErrorBoundary>
+          <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
+            <Header />
+            <main className="p-8">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </ErrorBoundary>
       </body>
     </html>
   );

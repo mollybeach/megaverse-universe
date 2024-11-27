@@ -12,6 +12,7 @@ import { LoadingCircle } from './LoadingCircle';
 import { compareMapWithGoal } from '@/utils/mapComparator';
 import { validateMap } from '@/utils/mapValidation';
 import { CellType } from '@/types/types';
+import ErrorBoundary from './ErrorBoundary';
 
 interface PlotControlsProps {
     phase: number | null;
@@ -62,39 +63,37 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             }
 
             // Update the local state immediately
-            const updatedMap = props.currentMap.map(row => [...row]);
-            updatedMap[row][column] = emojiType;
-            props.updateCurrentMap(updatedMap);
-
-            // Show success message
-            setSuccess(`Successfully added ${emojiType} at position [${row}, ${column}]`);
+            const updatedMap = [...props.currentMap]; // Create a proper copy
+            if (!Array.isArray(updatedMap)) {
+                console.error('Current map is not an array:', updatedMap);
+                return;
+            }
             
-            setTimeout(() => {
-                setSuccess(null);
-            }, 3000);
+            // Ensure we're working with a valid 2D array
+            if (updatedMap[row] && Array.isArray(updatedMap[row])) {
+                updatedMap[row][column] = emojiType;
+                props.updateCurrentMap(updatedMap);
+            }
 
+            // If you need to fetch updated data
             const getCurrentMap = await fetch('/api/current', {
                 method: 'GET',
-                cache: 'no-store',
-                next: { revalidate: 0 }
+                cache: 'no-store'
             });
             
             if (getCurrentMap.ok) {
                 const latestMapData = await getCurrentMap.json();
-                props.updateCurrentMap(latestMapData.map.content);
+                // Ensure we're getting the correct structure
+                if (latestMapData?.map?.content && Array.isArray(latestMapData.map.content)) {
+                    props.updateCurrentMap(latestMapData.map.content);
+                } else {
+                    console.error('Invalid map data structure:', latestMapData);
+                }
             }
 
-            const responseData = await response.json();
-            console.log('Success response:', responseData);
-            return responseData;
-
         } catch (error) {
-            console.error('Error adding emoji:', {
-                error,
-                stack: error instanceof Error ? error.stack : undefined
-            });
+            console.error('Error in addEmoji:', error);
             setError(error instanceof Error ? error.message : 'Failed to add emoji');
-            throw error;
         }
     };
 
@@ -164,21 +163,22 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
     };
     
     return (
-        <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md">
-            {error && <div className="text-red-500 text-center mb-4">
-                {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
-            </div>}
-            <div className="flex flex-col items-center space-y-4">
-                <div className="text-xl font-bold bg-gradient-to-r text-white text-transparent bg-clip-text">
-                    To Set Row & Column:  Hover Over Map
-                </div>
-                <Button 
-            onClick={handleValidation}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg mb-6"
-        >
-            Validate Map 🎯
-        </Button>
-                     {/* Polyanet controls */}
+        <ErrorBoundary>
+            <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md">
+                {error && <div className="text-red-500 text-center mb-4">
+                    {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
+                </div>}
+                <div className="flex flex-col items-center space-y-4">
+                    <div className="text-xl font-bold bg-gradient-to-r text-white text-transparent bg-clip-text">
+                        To Set Row & Column:  Hover Over Map
+                    </div>
+                    <Button 
+                        onClick={handleValidation}
+                        className="w-full bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg mb-6"
+                    >
+                        Validate Map 🎯
+                    </Button>
+                    {/* Polyanet controls */}
                     <div className="flex flex-col space-y-4">
                         <div className="flex space-x-4">
                             <Button onClick={() => addEmoji(props.row, props.column, 'POLYANET')} className="w-24 h-10 bg-gradient-to-r from-pink-600 to-blue-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
@@ -224,39 +224,39 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                             </div>
                         </div>
                     )}
-                         {/* Cometh buttons */}
-                {props.phase && (
-                    <div className="flex flex-col space-y-4">
-                        <div className="flex space-x-4">
-                            <Button onClick={() => addEmoji(props.row, props.column, 'UP_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
-                            Add
-                            <span className='rotate-[48deg] inline-block relative left-1'>
-                                ☄️
-                            </span>
-                        </Button>
-                        <Button onClick={() => addEmoji(props.row, props.column, 'DOWN_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
-                            Add
-                            <span className='rotate-[230deg] inline-block left-1.5 relative'>
-                                ☄️
-                            </span>
-                        </Button>
+                    {/* Cometh buttons */}
+                    {props.phase && (
+                        <div className="flex flex-col space-y-4">
+                            <div className="flex space-x-4">
+                                <Button onClick={() => addEmoji(props.row, props.column, 'UP_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add
+                                    <span className='rotate-[48deg] inline-block relative left-1'>
+                                        ☄️
+                                    </span>
+                                </Button>
+                                <Button onClick={() => addEmoji(props.row, props.column, 'DOWN_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add
+                                    <span className='rotate-[230deg] inline-block left-1.5 relative'>
+                                        ☄️
+                                    </span>
+                                </Button>
+                            </div>
+                            <div className="flex space-x-4">
+                                <Button onClick={() => addEmoji(props.row, props.column, 'RIGHT_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add
+                                    <span className='rotate-[140deg] inline-block left-1.5 relative'>
+                                        ☄️
+                                    </span>
+                                </Button>
+                                <Button onClick={() => addEmoji(props.row, props.column, 'LEFT_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add
+                                    <span className='rotate-[330deg] inline-block left-1.5 relative'>
+                                        ☄️
+                                    </span>
+                                </Button>
+                            </div>
                         </div>
-                        <div className="flex space-x-4">
-                        <Button onClick={() => addEmoji(props.row, props.column, 'RIGHT_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
-                            Add
-                            <span className='rotate-[140deg] inline-block left-1.5 relative'>
-                                ☄️
-                            </span>
-                        </Button>
-                        <Button onClick={() => addEmoji(props.row, props.column, 'LEFT_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
-                                Add
-                            <span className='rotate-[330deg] inline-block left-1.5 relative'>
-                                ☄️
-                            </span>
-                            </Button>
-                        </div>
-                    </div>
-                )}
+                    )}
                 </div>
         
                 <Button 
@@ -266,9 +266,10 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                     Auto-Sync with Goal Map 🚀
                 </Button>
                 {success && <div className="text-green-500 text-center mb-4 z-index-10">
-                {success}
-            </div>}
+                    {success}
+                </div>}
             </div>
+        </ErrorBoundary>
     );
 };
 

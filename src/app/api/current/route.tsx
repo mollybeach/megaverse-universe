@@ -91,7 +91,12 @@ export async function POST(request: Request) {
         }
 
         const data = await rawResponse.json();
-        return NextResponse.json(data);
+        return NextResponse.json({
+            map: {
+                content: Array.isArray(data) ? data : [],
+                phase: body.phase || null
+            }
+        });
 
     } catch (error) {
         console.error('Error in API route:', error);
