@@ -10,9 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getApiPath } from '@/utils/paths';
 import { LoadingCircle } from './LoadingCircle';
-import { compareMapWithGoal } from '@/lib/utils/mapComparator';
-
-
 interface PlotControlsProps {
     phase: number;
     currentMapData: CurrentMapType;
@@ -24,26 +21,25 @@ interface PlotControlsProps {
 export const PlotControls: React.FC<PlotControlsProps> = (props) => {
     const [error, setError] = useState<string | null>(null);
 
-    const addEmoji = async (emojiType: string, row?: number, column?: number) => {
-        console.log(`Adding ${emojiType} at`, row ?? props.row, column ?? props.column);
+    const addEmoji = async (emojiType: string) => {
+        console.log(`Adding ${emojiType} at`, props.row, props.column);
         try {
             const updatedCurrentMapData = { ...props.currentMapData };
-            const targetRow = row ?? props.row;
-            const targetColumn = column ?? props.column;
-
             if (updatedCurrentMapData.map.content) {
-                if (!Array.isArray(updatedCurrentMapData.map.content[targetRow])) {
-                    updatedCurrentMapData.map.content[targetRow] = [];
+                if (!Array.isArray(updatedCurrentMapData.map.content[props.row])) {
+                    updatedCurrentMapData.map.content[props.row] = [];
                 }
-                updatedCurrentMapData.map.content[targetRow][targetColumn] = emojiType;
+                updatedCurrentMapData.map.content[props.row][props.column] = emojiType;
 
                 props.updateCurrentMap(updatedCurrentMapData as CurrentMapType);
 
                 const requestBody = {
-                    row: targetRow,
-                    column: targetColumn,
+                    row: props.row,
+                    column: props.column,
                     emojiType
                 }
+
+                console.log("Request Body:", JSON.stringify(requestBody));
 
                 const response = await fetch(getApiPath('current'), {
                     method: 'POST',
@@ -54,7 +50,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                 });
 
                 const responseData = await response.json();
-                console.log("responseData", responseData);
+                console.log("response", responseData);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -63,7 +59,6 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
         } catch (error) {
             console.error(`Error adding ${emojiType}:`, error);
             setError(`Failed to add ${emojiType}.`);
-            throw error;
         }
     };
 
@@ -106,56 +101,11 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
         }
     };
 
-    const handleAutoSync = async () => {
-        try {
-            setError(null);
-            
-            // Fetch goal map
-            const goalResponse = await fetch(getApiPath('goal'));
-            const goalData = await goalResponse.json();
-            const goalMap = goalData.goal;
-
-            // Get current map
-            const currentMap = props.currentMapData.map.content;
-
-            // Compare maps and get differences
-            const differences = compareMapWithGoal(currentMap, goalMap);
-            console.log('Differences to process:', differences);
-
-            // Process each difference with delay to avoid rate limiting
-            for (const diff of differences) {
-                try {
-                    let emojiType = '';
-                    
-                    if (diff.type === 'POLYANET') {
-                        emojiType = 'POLYANET';
-                    } else if (diff.type === 'SOLOON') {
-                        emojiType = `${diff.color?.toUpperCase()}_SOLOON`;
-                    } else if (diff.type === 'COMETH') {
-                        emojiType = `${diff.direction?.toUpperCase()}_COMETH`;
-                    }
-
-                    await addEmoji(emojiType, diff.row, diff.column);
-                    
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    
-                } catch (error) {
-                    console.error(`Error processing difference:`, error);
-                    setError(`Failed to process some changes. Please try again.`);
-                }
-            }
-
-        } catch (error) {
-            console.error('Error in auto-sync:', error);
-            setError('Failed to auto-sync with goal map');
-        }
-    };
-
     return (
         <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md">
-            {error && <div className="text-red-500 text-center">
+            {error && <p className="text-red-500 text-center">
                 {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
-            </div>}
+            </p>}
             <div className="flex flex-col items-center space-y-4">
                 <div className="flex space-x-4">
                     <Input
@@ -231,17 +181,15 @@ export const PlotControls: React.FC<PlotControlsProps> = (props) => {
                                 ☄️
                             </span>
                         </Button>
+                        
+                       
                     </div>
                 )}
-                <Button 
-                    onClick={handleAutoSync}
-                    className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200 mt-4"
-                >
-                    Auto-Sync with Goal Map 🚀
-                </Button>
             </div>
         </div>
     );
 };
 
 export default PlotControls;
+
+  

@@ -10,9 +10,6 @@
 !.yarn/releases
 !.yarn/versions
 
-# make sure pnpm lock file is not ignored
-!pnpm-lock.yaml
-
 # testing
 /coverage
 

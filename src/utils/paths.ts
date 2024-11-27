@@ -5,7 +5,7 @@ export const getApiPath = (endpoint: string) => {
     // Log the configuration for debugging
     console.log('API Configuration:', {
       platform: isCloudflare ? 'Cloudflare' : 'Node.js',
-      environment: process.env.NEXT_PUBLIC_NODE_ENV,
+      environment: process.env.NODE_ENV,
       endpoint,
       fullPath: `/api/${endpoint}`
     });

@@ -1,14 +1,14 @@
 /*
-* @title: CURRENT MAP API
+* @title: API
 * @path: /src/app/api/current/route.tsx
-* @description: This API is used to fetch the current map and to post and delete polyanets, soloons, and comeths to the current map.
 */
 import { NextResponse, NextRequest } from 'next/server';
 import {  setPhase } from '@/lib/state/phaseState';
 
 export const dynamic = 'force-dynamic';
+//export const runtime = process.env.NODE_ENV === 'production' ? 'edge' : 'nodejs'
 export const runtime = 'edge';
-export const revalidate = 60;
+export const revalidate = 0;
 
 export async function GET() {
     try {
@@ -56,7 +56,6 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { row, column, emojiType } = body;
 
-        // Parse emojiType
         let urlParam: string;
         let direction: string | null = null;
         let color: string | null = null;
@@ -83,9 +82,10 @@ export async function POST(request: Request) {
             candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
             row,
             column,
-            ...(color && { color }), 
+            ...(color && { color }),
             ...(direction && { direction })
         };
+
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
@@ -126,13 +126,16 @@ export async function POST(request: Request) {
         }, { status: 500 });
     }
 }
+
 export async function DELETE(request: NextRequest) { 
     try {
         const body = await request.json();
         const { _id, content, candidateId, phase, __v, row, column } = body;
 
+        // Log the content to check its structure
         console.log("Content being sent:", JSON.stringify(content));
 
+        // Validate row and column
         if (row < 0 || column < 0 || !content[row] || !content[row][column]) {
             return NextResponse.json({ error: 'Invalid row or column' }, { status: 400 });
         }
@@ -164,6 +167,7 @@ export async function DELETE(request: NextRequest) {
             },
             body: JSON.stringify(apiBody)
         });
+       
         const responseData = await response.json(); // Parse the response as JSON
         console.log("Route.tsx: responseData", responseData);
 
