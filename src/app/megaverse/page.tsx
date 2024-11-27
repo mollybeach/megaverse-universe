@@ -12,7 +12,7 @@ import Map from '@/components/Map';
 import { GoalMapType } from '@/types/types';
 import { CurrentMapType } from '@/types/types';
 import { PlotControls } from '@/components/PlotControls';
-import { getPhaseState, setPhase } from '@/lib/state/phaseState';
+import { getPhase, setPhase } from '@/lib/state/phaseState';
 import { getApiPath } from '@/utils/paths';
 import { CellType } from '@/types/types';
 import { LoadingCircle } from '@/components/LoadingCircle';
@@ -33,7 +33,6 @@ const Megaverse: React.FC = () => {
                     method: 'GET',
                     cache: 'no-store',
                     next: { revalidate: 0 }
-
                 });
                 const jsonData: CurrentMapType = await response.json();
                 setCurrentMapData(jsonData);
@@ -77,7 +76,7 @@ const Megaverse: React.FC = () => {
     }, []);
     const currentMapArray : CellType[][] = currentMapData?.map.content || [];
     const goalMapArray : CellType[][] = goalMapData?.goal || [];
-    console.log("phase", getPhaseState().phase)
+    console.log("phase", getPhase())
     const cardsData = [
         {
             title: "Goal Map",
@@ -107,10 +106,9 @@ const Megaverse: React.FC = () => {
 
     return (
         <div className="container mx-auto px-4 py-4">
-         
-           <PlotControls phase={getPhaseState().phase} updateCurrentMap={setCurrentMapData} currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} row={row} column={column} />
-           <div className={`grid gap-6 ${getPhaseState().phase ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-2'}`}>
-                { (getPhaseState().phase === 2 ? [...cardsData].reverse() : cardsData).map((card) => (
+            <PlotControls phase={getPhase()} updateCurrentMap={setCurrentMapData} currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} row={row} column={column} />
+            <div className={`grid gap-6 ${getPhase() ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-2'}`}>
+                { (getPhase() === 2 ? [...cardsData].reverse() : cardsData).map((card) => (
                     <Card
                         key={card.title}
                         className={`p-6 hover:shadow-lg transition-shadow border-t-4 border-t-${card.color}-500`}

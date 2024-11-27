@@ -14,7 +14,7 @@ interface MapProps {
     setColumn: (column: number) => void;
 }
 
-const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }) => {
+const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }: MapProps) => {
 
     const handleEmojiClick = (rowIndex: number, cellIndex: number) => {
         setRow(rowIndex);

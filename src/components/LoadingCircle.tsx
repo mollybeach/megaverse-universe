@@ -32,7 +32,7 @@ export function LoadingCircle(props: LoadingCircleProps) {
             alignItems: 'center',
           }}
         >
-          {loadingEmojis.map((emoji, index) => (
+          {loadingEmojis.map((emoji: string, index: number) => (
             <span
               key={index}
               className="absolute"
