@@ -149,82 +149,92 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
             </div>}
             <div className="flex flex-col items-center space-y-4">
-                <div className="flex space-x-4">
-                    <Input
-                        type="number"
-                        value={props.row}
-                        readOnly
-                        className="w-24 h-10 text-lg border border-gray-300 rounded-md shadow-sm"
-                    />
-                    <Input
-                        type="number"
-                        value={props.column}
-                        readOnly
-                        className="w-24 h-10 text-lg border border-gray-300 rounded-md shadow-sm"
-                    />
-                    <Button 
-                        onClick={() => addEmoji(props.row, props.column, 'POLYANET')} 
-                        className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200"
-                    >
-                        Add 🪐
-                    </Button>
-                    <Button 
-                        onClick={() => handleDeleteEmoji({emojiType: 'POLYANET'})} 
-                        className="bg-gradient-to-r from-pink-600 to-blue-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200"
-                    >
-                        Delete Current Emoji
-                    </Button>
+                <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
+                    Set Row and Column
                 </div>
+                <div className="flex space-x-8">
+                    {/* Left grid - Soloon buttons */}
+                    {props.phase && (
+                        <div className="flex flex-col space-y-4">
+                            <div className="flex space-x-4">
+                                <Button onClick={() => addEmoji(props.row, props.column, 'WHITE_SOLOON')} className=" h-10 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add <span style={{ filter: 'grayscale(100%)' }} className='relative left-1'>🌕</span>
+                                </Button>
+                                <Button onClick={() => addEmoji(props.row, props.column, 'BLUE_SOLOON')} className="h-10 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add <span style={{ filter: 'grayscale(100%) brightness(30%) sepia(100%) hue-rotate(-180deg) saturate(700%) contrast(0.8)' }} className='relative left-1'>🌕</span>
+                                </Button>
+                            </div>
+                            <div className="flex space-x-4">
+                                <Button onClick={() => addEmoji(props.row, props.column, 'RED_SOLOON')} className=" h-10 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add <span style={{ filter: 'grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8)' }} className='relative left-1'>🌕</span>
+                                </Button>
+                                <Button onClick={() => addEmoji(props.row, props.column, 'PURPLE_SOLOON')} className=" h-10 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add <span style={{ filter: 'grayscale(100%) brightness(70%) sepia(50%) hue-rotate(-100deg) saturate(500%) contrast(1)' }} className='relative left-1'>🌕</span>
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Middle grid - Polyanet controls */}
+                    <div className="flex flex-col space-y-4">
+                        <div className="flex space-x-4">
+                            <Button onClick={() => addEmoji(props.row, props.column, 'POLYANET')} className="w-24 h-10 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                Add 🪐
+                            </Button>
+                            <Button onClick={() => handleDeleteEmoji({emojiType: 'POLYANET'})} className="w-24 h-10 bg-gradient-to-r from-pink-600 to-blue-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                Delete ❌
+                            </Button>
+                        </div>
+                        <div className="flex space-x-4">
+                            <Input
+                                type="number"
+                                value={props.row}
+                                readOnly
+                                className="w-24 h-10 text-lg border border-gray-300 rounded-md shadow-sm"
+                            />
+                            <Input
+                                type="number"
+                                value={props.column}
+                                readOnly
+                                className="w-24 h-10 text-lg border border-gray-300 rounded-md shadow-sm"
+                            />
+                        </div>
+                    </div>
+                         {/* Right grid - Cometh buttons */}
                 {props.phase && (
-                    <div className="flex space-x-4">
-                        <Button onClick={() => addEmoji(props.row, props.column, 'WHITE_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
-                            Add 
-                            <span style={{ filter: 'grayscale(100%)' }}>
-                                🌕
-                            </span>
-                        </Button>
-                        <Button onClick={() => addEmoji(props.row, props.column, 'BLUE_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add 
-                            <span style={{ filter: 'grayscale(100%) brightness(30%) sepia(100%) hue-rotate(-180deg) saturate(700%) contrast(0.8)' }}>
-                                🌕
-                            </span>
-                        </Button>
-                        <Button onClick={() => addEmoji(props.row, props.column, 'RED_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add 
-                            <span style={{ filter: 'grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8)' }}>
-                                🌕
-                            </span>
-                        </Button>
-                        <Button onClick={() => addEmoji(props.row, props.column, 'PURPLE_SOLOON')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">Add 
-                            <span style={{ filter: 'grayscale(100%) brightness(70%) sepia(50%) hue-rotate(-100deg) saturate(500%) contrast(1)' }}>
-                                🌕
-                            </span>
-                        </Button>
-                        <Button onClick={() => addEmoji(props.row, props.column, 'UP_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                    <div className="flex flex-col space-y-4">
+                        <div className="flex space-x-4">
+                            <Button onClick={() => addEmoji(props.row, props.column, 'UP_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
                             Add
-                            <span className='rotate-[48deg] inline-block top-2 right-1 relative'>
+                            <span className='rotate-[48deg] inline-block relative left-1'>
                                 ☄️
                             </span>
                         </Button>
                         <Button onClick={() => addEmoji(props.row, props.column, 'DOWN_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
                             Add
-                            <span className='rotate-[230deg] inline-block right-3 bottom-2 relative'>
+                            <span className='rotate-[230deg] inline-block left-1.5 relative'>
                                 ☄️
                             </span>
                         </Button>
+                        </div>
+                        <div className="flex space-x-4">
                         <Button onClick={() => addEmoji(props.row, props.column, 'RIGHT_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
                             Add
-                            <span className='rotate-[140deg] inline-block right-3 top-1 relative'>
+                            <span className='rotate-[140deg] inline-block left-1.5 relative'>
                                 ☄️
                             </span>
                         </Button>
-
                         <Button onClick={() => addEmoji(props.row, props.column, 'LEFT_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
-                            Add
-                            <span className='rotate-[330deg] inline-block left-1 bottom-1 relative'>
+                                Add
+                            <span className='rotate-[330deg] inline-block left-1.5 relative'>
                                 ☄️
                             </span>
-                        </Button>
+                            </Button>
+                        </div>
                     </div>
                 )}
+                </div>
+        
                 <Button 
                     onClick={handleAutoSync}
                     className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200 mt-4"

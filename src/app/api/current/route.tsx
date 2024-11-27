@@ -7,7 +7,6 @@ import { NextResponse, NextRequest } from 'next/server';
 //import {  setPhase } from '@/lib/state/phaseState';
 
 export const runtime = 'edge';
-//export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 interface Payload {
@@ -46,7 +45,7 @@ export async function GET() {
         const phase = data.map._id === process.env.NEXT_PUBLIC_PHASE_TWO_ID ? 2 : 
         data.map._id === process.env.NEXT_PUBLIC_PHASE_ONE_ID ? 1 : null;
         console.log('Phase:', phase);
-//return NextResponse.json({ ...data, phase }, { status: 200 });
+        //return NextResponse.json({ ...data, phase }, { status: 200 });
         return NextResponse.json(data, { status: 200 });
         
     } catch (error: unknown) {
@@ -87,11 +86,7 @@ export async function POST(request: Request) {
 
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '');
         const endpoint = `${baseUrl}/${entityType}`;
-        
-        console.log('Making request to:', endpoint);
-        console.log('With payload:', payload);
 
-        // Try with explicit headers and no transformations
         const rawResponse = await fetch(endpoint, {
             method: 'POST',
             headers: new Headers({

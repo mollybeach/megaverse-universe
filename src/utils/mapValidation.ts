@@ -24,22 +24,35 @@ export const validateMap = (currentMap: CellType[][], goalMap: CellType[][] | un
     let incorrect = 0;
     let extra = 0;
 
-    const isEmptyCell = (cell: string) => {
-        return cell === JSON.stringify(null) || cell === JSON.stringify("SPACE");
+    const normalizeCell = (cell: CellType): string => {
+        if (cell === null || cell === "SPACE") return "SPACE";
+        
+        if (typeof cell === 'object' && cell !== null) {
+            // Handle object format
+            if (cell.type === 0) return "POLYANET";
+            if (cell.type === 1 && 'color' in cell) {
+                return `${cell.color.toUpperCase()}_SOLOON`;
+            }
+            if (cell.type === 2 && 'direction' in cell) {
+                return `${cell.direction.toUpperCase()}_COMETH`;
+            }
+        }
+        
+        // Handle string format
+        return cell as string;
     };
 
     currentMap.forEach((row, rowIndex) => {
         row.forEach((cell, colIndex) => {
-            const currentCell = JSON.stringify(cell);
-            const goalCell = JSON.stringify(goalMap[rowIndex][colIndex]);
+            const normalizedCurrent = normalizeCell(cell);
+            const normalizedGoal = normalizeCell(goalMap[rowIndex][colIndex]);
             
-            if (currentCell !== goalCell) {
-                errors.push(`Mismatch at [${rowIndex}, ${colIndex}]: Current=${currentCell}, Goal=${goalCell}`);
+            if (normalizedCurrent !== normalizedGoal) {
+                errors.push(`Mismatch at [${rowIndex}, ${colIndex}]: Current=${JSON.stringify(cell)}, Goal=${JSON.stringify(goalMap[rowIndex][colIndex])}`);
                 
-                // Count type of mismatch
-                if (isEmptyCell(currentCell) && !isEmptyCell(goalCell)) {
+                if (normalizedCurrent === "SPACE" && normalizedGoal !== "SPACE") {
                     missing++;
-                } else if (!isEmptyCell(currentCell) && isEmptyCell(goalCell)) {
+                } else if (normalizedCurrent !== "SPACE" && normalizedGoal === "SPACE") {
                     extra++;
                 } else {
                     incorrect++;

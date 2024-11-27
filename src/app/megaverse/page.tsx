@@ -43,7 +43,7 @@ const Megaverse: React.FC = () => {
                 });
                 const jsonData: CurrentMapType = await response.json();
                 setCurrentMapData(jsonData);
-               /* if (jsonData.map._id === process.env.NEXT_PUBLIC_PHASE_TWO_ID) {
+                /* if (jsonData.map._id === process.env.NEXT_PUBLIC_PHASE_TWO_ID) {
                     setPhase(2);
                 }
                 */
@@ -95,7 +95,7 @@ const Megaverse: React.FC = () => {
             title: "Current Map",
             icon: Network,
             color: "blue",
-            content: <Map mapArray={currentMapArray || []}  setRow={setRow} setColumn={setColumn} />
+            content: <Map mapArray={currentMapArray || []}  setRow={setRow} setColumn={setColumn} goalMap={goalMapArray} />
         },
     ];
 
