@@ -1,4 +1,4 @@
-const { setupDevPlatform } = require("@cloudflare/next-on-pages/next-dev");
+import { setupDevPlatform } from "@cloudflare/next-on-pages/next-dev";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -10,7 +10,7 @@ const nextConfig = {
     assetPrefix: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? '' : '',
 };
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NEXT_PUBLIC_NODE_ENV === "development") {
     try {
         setupDevPlatform();
     } catch (e) {
@@ -19,4 +19,4 @@ if (process.env.NODE_ENV === "development") {
 
 }
 
-module.exports = nextConfig;
+export default nextConfig;
