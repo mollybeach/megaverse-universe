@@ -7,7 +7,9 @@
 import { NextResponse } from 'next/server';
 import { setPhase } from '@/lib/state/phaseState';
 
-//export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
+export const revalidate = 60;
 
 export async function GET() {
     try {
