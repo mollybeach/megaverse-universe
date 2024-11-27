@@ -1,4 +1,12 @@
 name = "megaverse-universe"
-compatibility_date = "2024-11-26"
-compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".vercel/output/static"
+compatibility_date = "2024-02-27"
+
+[build]
+command = "node scripts/build.js"
+output_dir = ".vercel/output/static"
+
+[build.environment]
+NODE_VERSION = "20.11.0"
+
+[site]
+bucket = ".vercel/output/static"
