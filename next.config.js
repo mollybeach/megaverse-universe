@@ -3,25 +3,22 @@ const { setupDevPlatform } = require("@cloudflare/next-on-pages/next-dev");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     webpack: (config) => {
-        // Ignore async_hooks in all builds
-        config.resolve.alias = {
-            ...config.resolve.alias,
-            'async_hooks': false
-        }
-
-        // Ignore Node.js specific modules
-        config.resolve.fallback = {
-            ...config.resolve.fallback,
-            'async_hooks': false,
-            'fs': false,
-            'net': false,
-            'tls': false,
-            'crypto': false,
-            'path': false,
-            'stream': false,
-            'http': false,
-            'https': false,
-            'zlib': false
+        // Handle Node.js built-in modules
+        config.resolve = {
+            ...config.resolve,
+            fallback: {
+                ...config.resolve.fallback,
+                'async_hooks': require.resolve('async_hooks-polyfill'),
+                'fs': false,
+                'net': false,
+                'tls': false,
+                'crypto': false,
+                'path': false,
+                'stream': false,
+                'http': false,
+                'https': false,
+                'zlib': false
+            }
         }
         return config;
     },
