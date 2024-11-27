@@ -50,8 +50,6 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             setSuccess(null);
             setIsLoading(true);
             
-            console.log('Attempting to add emoji:', { row, column, emojiType });
-
             const response = await fetch('/api/current', {
                 method: 'POST',
                 headers: {
@@ -61,32 +59,13 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Error response:', {
-                    status: response.status,
-                    statusText: response.statusText,
-                    data: errorData
-                });
-                throw new Error(`HTTP error! status: ${response.status}, details: ${JSON.stringify(errorData)}`);
-            }
-            setSuccess(`Successfully added ${emojiType} at position [${row}, ${column}]`);
-            
-            setTimeout(() => {
-                setSuccess(null);
-            }, 3000);
-
-            const updatedMap = [...currentMap]; 
-            if (!Array.isArray(updatedMap)) {
-                console.error('Current map is not an array:', updatedMap);
-                return;
-            }
-            
-            if (updatedMap[row] && Array.isArray(updatedMap[row])) {
-                updatedMap[row][column] = emojiType;
-                updateCurrentMap(updatedMap);
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             await fetchCurrentMap();
+            
+            setSuccess(`Successfully added ${emojiType} at position [${row}, ${column}]`);
+            setTimeout(() => setSuccess(null), 3000);
 
         } catch (error) {
             console.error('Error in addEmoji:', error);
@@ -97,14 +76,11 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
     };
 
     const handleDeleteEmoji = async ({emojiType}: {emojiType: string}) => {
-        console.log("deleteEmoji", props.row, props.column);
         try {
             setIsLoading(true);
             setError(null);
             setSuccess(null);
             
-            console.log('Attempting to delete emoji:', { row: props.row, column: props.column, emojiType });
-
             const response = await fetch('/api/current', {
                 method: 'DELETE',
                 headers: {
@@ -118,33 +94,14 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Error response:', {
-                    status: response.status,
-                    statusText: response.statusText,
-                    data: errorData
-                });
-                throw new Error(`HTTP error! status: ${response.status}, details: ${JSON.stringify(errorData)}`);
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            setSuccess(`Successfully deleted ${emojiType} at position [${props.row}, ${props.column}]`);
-            
-            setTimeout(() => {
-                setSuccess(null);
-            }, 3000);
-
-            const updatedMap = [...currentMap];
-            if (!Array.isArray(updatedMap)) {
-                console.error('Current map is not an array:', updatedMap);
-                return;
-            }
-            
-            if (updatedMap[props.row] && Array.isArray(updatedMap[props.row])) {
-                updatedMap[props.row][props.column] = 'SPACE';
-                updateCurrentMap(updatedMap);
-            }
-
+            // First fetch the updated map
             await fetchCurrentMap();
+            
+            setSuccess(`Successfully deleted ${emojiType} at position [${props.row}, ${props.column}]`);
+            setTimeout(() => setSuccess(null), 3000);
 
         } catch (error) {
             console.error('Error deleting Emoji:', error);
