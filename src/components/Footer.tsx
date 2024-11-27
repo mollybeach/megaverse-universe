@@ -1,7 +1,7 @@
-/**
- * @title Footer
- * @fileoverview Component that displays the footer with navigation and copyright information
- * @path /components/Footer.tsx
+/*
+ * @title: Footer
+ * @path: src/components/Footer.tsx
+ * @description: Footer component
  */
 
 import { HeartFilledIcon, GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons"

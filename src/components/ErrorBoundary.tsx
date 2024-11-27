@@ -1,3 +1,9 @@
+/*
+ * @title: Error Boundary
+ * @path: src/components/ErrorBoundary.tsx
+ * @description: Error boundary component
+ */
+
 'use client';
 
 import React from 'react';

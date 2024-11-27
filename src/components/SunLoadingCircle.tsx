@@ -1,3 +1,9 @@
+/*
+ * @title: Sun Loading Circle
+ * @path: src/components/SunLoadingCircle.tsx
+ * @description: Sun loading circle component
+ */
+
 'use client';
 
 import React from 'react';

@@ -5,15 +5,11 @@
  */
 
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Network } from "lucide-react";
 import Map from '@/components/Map';
-import { GoalMapType } from '@/types/types';
-import { CurrentMapType } from '@/types/types';
 import { PlotControls } from '@/components/PlotControls';
-import { getApiPath } from '@/utils/paths';
-import { CellType } from '@/types/types';
 import { LoadingCircle } from '@/components/LoadingCircle';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { useMegaverseMaps } from '@/hooks/useMegaverseMaps';

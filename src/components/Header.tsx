@@ -1,3 +1,9 @@
+/*
+ * @title: Header
+ * @path: src/components/Header.tsx
+ * @description: Header component
+ */
+
 "use client";
 
 import React from 'react';

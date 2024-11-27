@@ -1,3 +1,9 @@
+/*
+ * @title: Card
+ * @path: src/components/ui/card.tsx
+ * @description: Card component
+ */
+
 import * as React from "react"
 
 import { cn } from "@/utils/tailwind-utils"

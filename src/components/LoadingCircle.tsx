@@ -1,3 +1,9 @@
+/*
+ * @title: Loading Circle
+ * @path: src/components/LoadingCircle.tsx
+ * @description: Loading circle component
+ */
+
 import React, { useEffect, useState } from 'react';
 
 interface LoadingCircleProps {

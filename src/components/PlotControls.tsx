@@ -1,7 +1,7 @@
-/**
- * @title Plot Controls
- * @fileoverview Plot controls component
- * @path /components/PlotControls.tsx
+/*
+ * @title: Plot Controls
+ * @path: src/components/PlotControls.tsx
+ * @description: Plot controls component
  */
 
 import React, { useState } from 'react';

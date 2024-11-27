@@ -1,3 +1,9 @@
+/*
+ * @title: Input
+ * @path: src/components/ui/input.tsx
+ * @description: Input component
+ */
+
 import * as React from "react"
 
 import { cn } from "@/utils/tailwind-utils"

@@ -1,3 +1,9 @@
+/*
+ * @title: Main Content
+ * @path: src/components/MainContent.tsx
+ * @description: Main content component
+ */
+
 import React from 'react';
 const MainContent: React.FC = () => {
 

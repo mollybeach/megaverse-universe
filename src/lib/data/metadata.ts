@@ -1,18 +1,15 @@
-/**
- * @title App Metadata
- * @fileoverview App metadata
- * @path /lib/data/metadata.ts
+/*
+ * @title: App Metadata
+ * @path: src/lib/data/metadata.ts
+ * @description: App metadata
  */
 
 import { HeaderNavItemsType } from "@/types/types";
-//import { BookOpen, Home, FileText, BarChart } from "lucide-react";
 
-// Define the emoji and SVG for the navigation items
-const SaturnEmoji = '🪐'; // Emoji for Megaverse
-//const ChallengeSVG = { src: 'https://res.cloudinary.com/storagemanagementcontainer/image/upload/v1732334298/portfolio/crossmint-logo_km22uh.svg', alt: 'Challenge Logo' }; // SVG for Challenge
-const ChallengeEmoji = '🏆'; // Emoji for Challenge
-const BookIcon = '📚'; // Emoji for Documentation
-const MapEmoji = '🗺️'; // Emoji for Map
+const SaturnEmoji = '🪐'; 
+const ChallengeEmoji = '🏆'; 
+const BookIcon = '📚'; 
+const MapEmoji = '🗺️'; 
 
 
 export const HeaderNavItems: HeaderNavItemsType[] = [
@@ -38,17 +35,15 @@ export const polyanetSolution = [
     [8, 8]
 ];
 
-export const isPhaseTwo = false;
-
 export const metaverseMap = {
-   'SPACE': '🌌',
-   'POLYANET': '🪐',
-   'RIGHT_COMETH': '☄️',
-   'UP_COMETH': '🔼',
-   'LEFT_COMETH': '⬅️',
-   'DOWN_COMETH': '🔽',
-   'WHITE_SOLOON': '⚪️',
-   'BLUE_SOLOON': '🔵',
-   'RED_SOLOON': '🔴',
-   'PURPLE_SOLOON': '🟣'
+    'SPACE': '🌌',
+    'POLYANET': '🪐',
+    'RIGHT_COMETH': '☄️',
+    'UP_COMETH': '🔼',
+    'LEFT_COMETH': '⬅️',
+    'DOWN_COMETH': '🔽',
+    'WHITE_SOLOON': '⚪️',
+    'BLUE_SOLOON': '🔵',
+    'RED_SOLOON': '🔴',
+    'PURPLE_SOLOON': '🟣'
 }

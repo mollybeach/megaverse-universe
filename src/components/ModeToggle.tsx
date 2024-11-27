@@ -1,7 +1,7 @@
-/**
- * @title ModeToggle
- * @fileoverview Component that toggles the theme between light and dark
- * @path /components/ModeToggle.tsx
+/*
+ * @title: Mode Toggle
+ * @path: src/components/ModeToggle.tsx
+ * @description: Mode toggle component
  */
 
 "use client"

@@ -1,3 +1,9 @@
+/*
+ * @title: Hero
+ * @path: src/components/Hero.tsx
+ * @description: Hero component
+ */
+
 import Image from "next/image";
 import { Poppins } from "next/font/google";
 import React, { useEffect, useState } from 'react';
