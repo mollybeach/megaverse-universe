@@ -58,12 +58,8 @@ const Megaverse: React.FC = () => {
                     <ErrorBoundary>
                         <PlotControls 
                             phase={phase} 
-                            updateCurrentMap={setCurrentMapArray} 
-                            currentMap={currentMapArray}
                             row={row} 
                             column={column} 
-                            goalMap={goalMapArray}
-                            fetchCurrentMap={async () => {}}
                         />
                     </ErrorBoundary>
                 </div>

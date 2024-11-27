@@ -14,15 +14,12 @@ import { CellType } from '@/types/types';
 import ErrorBoundary from './ErrorBoundary';
 import SunLoadingCircle from './SunLoadingCircle';
 import { getSpaceErrorMessage } from '@/utils/spaceErrorMessage';
+import { useMegaverseMaps } from '@/hooks/useMegaverseMaps';
 
 interface PlotControlsProps {
     phase: number | null;
-    currentMap: CellType[][];
-    goalMap: CellType[][];
-    updateCurrentMap: (newMap: CellType[][]) => void;
     row: number;
     column: number;
-    fetchCurrentMap: () => Promise<void>;
 }
 
 export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsProps) => {
@@ -30,8 +27,15 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
     const [success, setSuccess] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const {
+        currentMapArray: currentMap,
+        goalMapArray: goalMap,
+        setCurrentMapArray: updateCurrentMap,
+        fetchCurrentMap
+    } = useMegaverseMaps();
+
     const handleValidation = () => {
-        const { isValid, errors } = validateMap(props.currentMap, props.goalMap);
+        const { isValid, errors } = validateMap(currentMap, goalMap);
         
         if (isValid) {
             alert('Congratulations! Your solution matches the goal map! 🎉');
@@ -71,7 +75,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 setSuccess(null);
             }, 3000);
 
-            const updatedMap = [...props.currentMap]; 
+            const updatedMap = [...currentMap]; 
             if (!Array.isArray(updatedMap)) {
                 console.error('Current map is not an array:', updatedMap);
                 return;
@@ -79,10 +83,10 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             
             if (updatedMap[row] && Array.isArray(updatedMap[row])) {
                 updatedMap[row][column] = emojiType;
-                props.updateCurrentMap(updatedMap);
+                updateCurrentMap(updatedMap);
             }
 
-            await props.fetchCurrentMap();
+            await fetchCurrentMap();
 
         } catch (error) {
             console.error('Error in addEmoji:', error);
@@ -129,7 +133,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 setSuccess(null);
             }, 3000);
 
-            const updatedMap = [...props.currentMap];
+            const updatedMap = [...currentMap];
             if (!Array.isArray(updatedMap)) {
                 console.error('Current map is not an array:', updatedMap);
                 return;
@@ -137,10 +141,10 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             
             if (updatedMap[props.row] && Array.isArray(updatedMap[props.row])) {
                 updatedMap[props.row][props.column] = 'SPACE';
-                props.updateCurrentMap(updatedMap);
+                updateCurrentMap(updatedMap);
             }
 
-            await props.fetchCurrentMap();
+            await fetchCurrentMap();
 
         } catch (error) {
             console.error('Error deleting Emoji:', error);
@@ -156,8 +160,8 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             setError(null);
             setSuccess(null);
             
-            const currentMap = props.currentMap.map(row => [...row]);
-            const differences = compareMapWithGoal(currentMap, props.goalMap as string[][]);
+            const mapCopy = currentMap.map(row => [...row]);
+            const differences = compareMapWithGoal(mapCopy, goalMap as string[][]);
             for (const diff of differences) {
                 try {
                     let emojiType = '';
