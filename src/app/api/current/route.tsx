@@ -83,10 +83,9 @@ export async function POST(request: Request) {
             candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
             row,
             column,
-            ...(color && { color }),
+            ...(color && { color }), 
             ...(direction && { direction })
         };
-
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: {

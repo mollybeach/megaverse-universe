@@ -16,8 +16,9 @@
     "scripts": {
         "clean": "rm -rf .next cache",
         "dev": "next dev",
-        "build": "npm run clean && next build",
-        "pages:build": "npm run clean && npx @cloudflare/next-on-pages",
+        "build": "npm run clean && next build --bundle --platform=node --external:async_hooks --external:next --external:react",
+        "pages:build": "npm run clean && npx @cloudflare/next-on-pages --bundle --platform=node --external:async_hooks --external:next --external:react",
+        "vercel-build": "npx esbuild ./src/app/page.tsx --bundle --platform=node --external:async_hooks --external:next --external:react",
         "preview": "npm run pages:build && wrangler pages dev .next",
         "deploy": "npm run pages:build && wrangler pages deploy .next",
         "deploy:clean": "npm run clean && vercel --prod"
