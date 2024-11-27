@@ -14,6 +14,7 @@ import { validateMap } from '@/utils/mapValidation';
 import { CellType } from '@/types/types';
 import ErrorBoundary from './ErrorBoundary';
 import SunLoadingCircle from './SunLoadingCircle';
+import { getSpaceErrorMessage } from '@/utils/spaceErrorMessage';
 
 interface PlotControlsProps {
     phase: number | null;
@@ -97,7 +98,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
 
         } catch (error) {
             console.error('Error in addEmoji:', error);
-            setError(error instanceof Error ? error.message : 'Failed to add emoji');
+            setError(getSpaceErrorMessage('add'));
         } finally {
             setIsLoading(false);
         }
@@ -109,13 +110,10 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             setIsLoading(true);
             setError(null);
             setSuccess(null);
+            
+            console.log('Attempting to delete emoji:', { row: props.row, column: props.column, emojiType });
 
-            const updatedMap = props.currentMap.map(row => [...row]);
-            updatedMap[props.row][props.column] = 'SPACE';
-            props.updateCurrentMap(updatedMap);
-            console.log("updatedCurrentMapData", updatedMap);
-
-            const response = await fetch(getApiPath('current'), {
+            const response = await fetch('/api/current', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -127,18 +125,50 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 })
             });
 
-            const responseData = await response.json();
-            console.log("response", responseData);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const errorData = await response.json();
+                console.error('Error response:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    data: errorData
+                });
+                throw new Error(`HTTP error! status: ${response.status}, details: ${JSON.stringify(errorData)}`);
             }
-            setSuccess(`Successfully deleted emoji at position [${props.row}, ${props.column}]`);
+
+            setSuccess(`Successfully deleted ${emojiType} at position [${props.row}, ${props.column}]`);
+            
             setTimeout(() => {
                 setSuccess(null);
             }, 3000);
+
+            const updatedMap = [...props.currentMap];
+            if (!Array.isArray(updatedMap)) {
+                console.error('Current map is not an array:', updatedMap);
+                return;
+            }
+            
+            if (updatedMap[props.row] && Array.isArray(updatedMap[props.row])) {
+                updatedMap[props.row][props.column] = 'SPACE';
+                props.updateCurrentMap(updatedMap);
+            }
+
+            const getCurrentMap = await fetch('/api/current', {
+                method: 'GET',
+                cache: 'no-store'
+            });
+            
+            if (getCurrentMap.ok) {
+                const latestMapData = await getCurrentMap.json();
+                if (latestMapData?.map?.content && Array.isArray(latestMapData.map.content)) {
+                    props.updateCurrentMap(latestMapData.map.content);
+                } else {
+                    console.error('Invalid map data structure:', latestMapData);
+                }
+            }
+
         } catch (error) {
             console.error('Error deleting Emoji:', error);
-            setError('Failed to delete Emoji.');
+            setError(getSpaceErrorMessage('delete'));
         } finally {
             setIsLoading(false);
         }
@@ -172,7 +202,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 }
             }
         } catch (error) {
-            setError('Failed to auto-sync with goal map');
+            setError(getSpaceErrorMessage('sync'));
         } finally {
             setIsLoading(false);
         }
@@ -181,9 +211,11 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
     return (
         <ErrorBoundary>
             <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md">
-                {error && <div className="text-red-500 text-center mb-4">
-                    {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
-                </div>}
+                {error && (
+                    <div className="text-red-500 text-center mb-4">
+                        {error} <LoadingCircle message={error} />
+                    </div>
+                )}
                 <div className="flex flex-col items-center space-y-4">
                     <div className="text-xl font-bold bg-gradient-to-r text-white text-transparent bg-clip-text">
                         To Set Row & Column:  Hover Over Map
@@ -282,10 +314,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                 </Button>
                 <div className="text-center mt-4">
                     {isLoading ? (
-                        <SunLoadingCircle 
-                            size="lg" 
-                            message="Posting to Metaverse..."
-                        />
+                        <SunLoadingCircle size="lg" message={error || "Loading..."} />
                     ) : success ? (
                         <div className="text-green-500 font-semibold">
                             {success}

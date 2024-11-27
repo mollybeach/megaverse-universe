@@ -110,47 +110,52 @@ export async function POST(request: Request) {
 export async function DELETE(request: NextRequest) { 
     try {
         const body = await request.json();
-        const { _id, content, candidateId, phase, __v, row, column } = body;
+        const { row, column, emojiType } = body;
 
-        console.log("Content being sent:", JSON.stringify(content));
-
-        if (row < 0 || column < 0 || !content[row] || !content[row][column]) {
-            return NextResponse.json({ error: 'Invalid row or column' }, { status: 400 });
-        }
-
-        const getResponse = await GET();
-        const data = await getResponse.json();
-        const currentMapArray = data.map.content;
-
-        content[row][column] = 'SPACE'; 
-        currentMapArray[row][column] = 'SPACE';
-        currentMapArray.candidateId = candidateId;
-        currentMapArray.phase = phase;
-        currentMapArray.__v = __v;
-
-        const apiBody = { 
-            _id, 
-            content: JSON.parse(JSON.stringify(content)),
-            candidateId, 
-            phase, 
-            __v, 
-            row, 
-            column 
+        let entityType = 'polyanets';
+        const payload: Payload = {
+            candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
+            row,
+            column
         };
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/polyanets`, {
+        if (emojiType.includes('SOLOON')) {
+            entityType = 'soloons';
+            payload.color = emojiType.split('_')[0].toLowerCase();
+        } else if (emojiType.includes('COMETH')) {
+            entityType = 'comeths';
+            payload.direction = emojiType.split('_')[0].toLowerCase();
+        }
+
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '');
+        const endpoint = `${baseUrl}/${entityType}`;
+
+        const response = await fetch(endpoint, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(apiBody)
+            body: JSON.stringify(payload)
         });
-        const responseData = await response.json(); // Parse the response as JSON
-        console.log("Route.tsx: responseData", responseData);
 
-        return NextResponse.json(currentMapArray, { status: 200 });
+        if (!response.ok) {
+            const errorData = await response.json();
+            return NextResponse.json({ error: errorData }, { status: response.status });
+        }
+
+        const data = await response.json();
+        return NextResponse.json({
+            map: {
+                content: Array.isArray(data) ? data : [],
+                phase: body.phase || null
+            }
+        });
+
     } catch (error) {
         console.error('Error in DELETE:', error);
-        return NextResponse.json({ error: `Failed to process current map data request: ${(error as Error).message}` }, { status: 500 });
+        return NextResponse.json(
+            { error: 'Internal Server Error', details: error instanceof Error ? error.message : String(error) },
+            { status: 500 }
+        );
     }
 }
