@@ -10,9 +10,10 @@ interface State {
 }
 
 class ErrorBoundary extends React.Component<Props, State> {
-    public state: State = {
-        hasError: false
-    };
+    constructor(props: Props) {
+        super(props);
+        this.state = { hasError: false };
+    }
 
     public static getDerivedStateFromError(error: Error): State {
         return { hasError: true, error };
