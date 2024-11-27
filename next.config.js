@@ -2,6 +2,16 @@ const { setupDevPlatform } = require("@cloudflare/next-on-pages/next-dev");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    webpack: (config, { isServer }) => {
+        if (!isServer) {
+            // Don't attempt to bundle node-specific modules on the client side
+            config.resolve.fallback = {
+                ...config.resolve.fallback,
+                "async_hooks": false,
+            };
+        }
+        return config;
+    },
     images: {
         unoptimized: true,
         domains: ['res.cloudinary.com'],
