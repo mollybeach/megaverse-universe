@@ -7,7 +7,6 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getApiPath } from '@/utils/paths';
 import { LoadingCircle } from './LoadingCircle';
 import { compareMapWithGoal } from '@/utils/mapComparator';
 import { validateMap } from '@/utils/mapValidation';

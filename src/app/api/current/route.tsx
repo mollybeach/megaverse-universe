@@ -4,6 +4,7 @@
 * @description: This API is used to fetch the current map and to post and delete polyanets, soloons, and comeths to the current map.
 */
 import { NextResponse, NextRequest } from 'next/server';
+import { getEmojiTypeMapping } from '@/utils/emojiTypeMapper';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -56,20 +57,14 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { row, column, emojiType } = body;
 
-        let entityType = 'polyanets';
+        const { entityType, color, direction } = getEmojiTypeMapping(emojiType);
         const payload: Payload = {
             candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
             row,
-            column
+            column,
+            ...(color && { color }),
+            ...(direction && { direction })
         };
-
-        if (emojiType.includes('SOLOON')) {
-            entityType = 'soloons';
-            payload.color = emojiType.split('_')[0].toLowerCase();
-        } else if (emojiType.includes('COMETH')) {
-            entityType = 'comeths';
-            payload.direction = emojiType.split('_')[0].toLowerCase();
-        }
 
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '');
         const endpoint = `${baseUrl}/${entityType}`;
@@ -112,20 +107,14 @@ export async function DELETE(request: NextRequest) {
         const body = await request.json();
         const { row, column, emojiType } = body;
 
-        let entityType = 'polyanets';
+        const { entityType, color, direction } = getEmojiTypeMapping(emojiType);
         const payload: Payload = {
             candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
             row,
-            column
+            column,
+            ...(color && { color }),
+            ...(direction && { direction })
         };
-
-        if (emojiType.includes('SOLOON')) {
-            entityType = 'soloons';
-            payload.color = emojiType.split('_')[0].toLowerCase();
-        } else if (emojiType.includes('COMETH')) {
-            entityType = 'comeths';
-            payload.direction = emojiType.split('_')[0].toLowerCase();
-        }
 
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '');
         const endpoint = `${baseUrl}/${entityType}`;
