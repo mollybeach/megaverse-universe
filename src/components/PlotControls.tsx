@@ -81,7 +81,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             
             if (getCurrentMap.ok) {
                 const latestMapData = await getCurrentMap.json();
-                props.updateCurrentMap(latestMapData);
+                props.updateCurrentMap(latestMapData.map.content);
             }
 
             const responseData = await response.json();
