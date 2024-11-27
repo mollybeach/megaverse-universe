@@ -11,11 +11,13 @@ import { Input } from "@/components/ui/input";
 import { getApiPath } from '@/utils/paths';
 import { LoadingCircle } from './LoadingCircle';
 import { compareMapWithGoal } from '@/utils/mapComparator';
-
+import { validateMap } from '@/utils/mapValidation';
+import { CellType } from '@/types/types';
 
 interface PlotControlsProps {
     phase: number;
     currentMapData: CurrentMapType;
+    goalMap: CellType[][];
     updateCurrentMap: (newMap: CurrentMapType) => void;
     row: number;
     column: number;
@@ -24,7 +26,17 @@ interface PlotControlsProps {
 export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsProps) => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
-
+    const mapArray = props.currentMapData.map.content;
+    const goalMap = props.goalMap;
+    const handleValidation = () => {
+        const { isValid, errors } = validateMap(mapArray, goalMap);
+        
+        if (isValid) {
+            alert('Congratulations! Your solution matches the goal map! 🎉');
+        } else {
+            alert(`Solution is not correct yet.\nFound ${errors.length} mismatches.`);
+        }
+    };
     const addEmoji = async (row: number, column: number, emojiType: string) => {
         try {
             setError(null);
@@ -180,42 +192,23 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             {error && <div className="text-red-500 text-center mb-4">
                 {error} <LoadingCircle message="Posting to Metaverse..." error={error} />
             </div>}
-            {success && (
-                <div className="fixed top-4 left-1/2 transform -translate-x-1/2 text-green-500 text-center mb-4 p-2 bg-green-50 border border-green-200 rounded-md shadow-lg z-50">
-                    ✅ {success}
-                </div>
-            )}
+            {success && <div className="text-green-500 text-center mb-4 z-index-10">
+                {success}
+            </div>}
             <div className="flex flex-col items-center space-y-4">
-                <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
-                    Set Row and Column
+                <div className="text-xl font-bold bg-gradient-to-r text-white text-transparent bg-clip-text">
+                    To Set Row & Column:  Hover Over Map
                 </div>
-                <div className="flex space-x-8">
-                    {/* Left grid - Soloon buttons */}
-                    {props.phase && (
-                        <div className="flex flex-col space-y-4">
-                            <div className="flex space-x-4">
-                                <Button onClick={() => addEmoji(props.row, props.column, 'WHITE_SOLOON')} className=" h-10 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
-                                    Add <span style={{ filter: 'grayscale(100%)' }} className='relative left-1'>🌕</span>
-                                </Button>
-                                <Button onClick={() => addEmoji(props.row, props.column, 'BLUE_SOLOON')} className="h-10 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
-                                    Add <span style={{ filter: 'grayscale(100%) brightness(30%) sepia(100%) hue-rotate(-180deg) saturate(700%) contrast(0.8)' }} className='relative left-1'>🌕</span>
-                                </Button>
-                            </div>
-                            <div className="flex space-x-4">
-                                <Button onClick={() => addEmoji(props.row, props.column, 'RED_SOLOON')} className=" h-10 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
-                                    Add <span style={{ filter: 'grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8)' }} className='relative left-1'>🌕</span>
-                                </Button>
-                                <Button onClick={() => addEmoji(props.row, props.column, 'PURPLE_SOLOON')} className=" h-10 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
-                                    Add <span style={{ filter: 'grayscale(100%) brightness(70%) sepia(50%) hue-rotate(-100deg) saturate(500%) contrast(1)' }} className='relative left-1'>🌕</span>
-                                </Button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Middle grid - Polyanet controls */}
+                <Button 
+            onClick={handleValidation}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg mb-6"
+        >
+            Validate Map 🎯
+        </Button>
+                     {/* Polyanet controls */}
                     <div className="flex flex-col space-y-4">
                         <div className="flex space-x-4">
-                            <Button onClick={() => addEmoji(props.row, props.column, 'POLYANET')} className="w-24 h-10 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                            <Button onClick={() => addEmoji(props.row, props.column, 'POLYANET')} className="w-24 h-10 bg-gradient-to-r from-pink-600 to-blue-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
                                 Add 🪐
                             </Button>
                             <Button onClick={() => handleDeleteEmoji({emojiType: 'POLYANET'})} className="w-24 h-10 bg-gradient-to-r from-pink-600 to-blue-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
@@ -237,17 +230,38 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                             />
                         </div>
                     </div>
-                         {/* Right grid - Cometh buttons */}
+                    {/* Soloon buttons */}
+                    {props.phase && (
+                        <div className="flex flex-col space-y-4">
+                            <div className="flex space-x-4">
+                                <Button onClick={() => addEmoji(props.row, props.column, 'WHITE_SOLOON')} className="w-24 h-10 bg-gradient-to-r from-pink-400 to-orange-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add <span style={{ filter: 'grayscale(100%)' }} className='relative left-1'>🌕</span>
+                                </Button>
+                                <Button onClick={() => addEmoji(props.row, props.column, 'BLUE_SOLOON')} className="w-24 h-10 bg-gradient-to-r from-pink-400 to-orange-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add <span style={{ filter: 'grayscale(100%) brightness(30%) sepia(100%) hue-rotate(-180deg) saturate(700%) contrast(0.8)' }} className='relative left-1'>🌕</span>
+                                </Button>
+                            </div>
+                            <div className="flex space-x-4">
+                                <Button onClick={() => addEmoji(props.row, props.column, 'RED_SOLOON')} className="w-24 h-10 bg-gradient-to-r from-pink-400 to-orange-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add <span style={{ filter: 'grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8)' }} className='relative left-1'>🌕</span>
+                                </Button>
+                                <Button onClick={() => addEmoji(props.row, props.column, 'PURPLE_SOLOON')} className="w-24 h-10 bg-gradient-to-r from-pink-400 to-orange-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                                    Add <span style={{ filter: 'grayscale(100%) brightness(70%) sepia(50%) hue-rotate(-100deg) saturate(500%) contrast(1)' }} className='relative left-1'>🌕</span>
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                         {/* Cometh buttons */}
                 {props.phase && (
                     <div className="flex flex-col space-y-4">
                         <div className="flex space-x-4">
-                            <Button onClick={() => addEmoji(props.row, props.column, 'UP_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                            <Button onClick={() => addEmoji(props.row, props.column, 'UP_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
                             Add
                             <span className='rotate-[48deg] inline-block relative left-1'>
                                 ☄️
                             </span>
                         </Button>
-                        <Button onClick={() => addEmoji(props.row, props.column, 'DOWN_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                        <Button onClick={() => addEmoji(props.row, props.column, 'DOWN_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
                             Add
                             <span className='rotate-[230deg] inline-block left-1.5 relative'>
                                 ☄️
@@ -255,13 +269,13 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                         </Button>
                         </div>
                         <div className="flex space-x-4">
-                        <Button onClick={() => addEmoji(props.row, props.column, 'RIGHT_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                        <Button onClick={() => addEmoji(props.row, props.column, 'RIGHT_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
                             Add
                             <span className='rotate-[140deg] inline-block left-1.5 relative'>
                                 ☄️
                             </span>
                         </Button>
-                        <Button onClick={() => addEmoji(props.row, props.column, 'LEFT_COMETH')} className="bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
+                        <Button onClick={() => addEmoji(props.row, props.column, 'LEFT_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
                                 Add
                             <span className='rotate-[330deg] inline-block left-1.5 relative'>
                                 ☄️
@@ -279,7 +293,6 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                     Auto-Sync with Goal Map 🚀
                 </Button>
             </div>
-        </div>
     );
 };
 

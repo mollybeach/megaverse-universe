@@ -112,21 +112,35 @@ const Megaverse: React.FC = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-4">
-            <PlotControls phase={getPhase()} updateCurrentMap={setCurrentMapData} currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} row={row} column={column} />
-            <div className={`grid gap-6 ${getPhase() ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-2'}`}>
-                { (getPhase() === 2 ? [...cardsData].reverse() : cardsData).map((card) => (
-                    <Card
-                        key={card.title}
-                        className={`p-6 hover:shadow-lg transition-shadow border-t-4 border-t-${card.color}-500`}
-                    >
-                        <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
-                            <card.icon className={`h-5 w-5 text-${card.color}-500`} />
-                            {card.title}
-                        </h3>
-                        {card.content}
-                    </Card>
-                ))}
+        <div className="flex h-screen">
+            {/* Side Navigation - Plot Controls */}
+            <div className="w-72 min-h-screen bg-white dark:bg-slate-900 shadow-lg p-4 flex flex-col">
+                <PlotControls 
+                    phase={getPhase()} 
+                    updateCurrentMap={setCurrentMapData} 
+                    currentMapData={currentMapData || {map: {_id: '', content: [], candidateId: '', phase: 0, __v: 0, }}} 
+                    row={row} 
+                    column={column} 
+                    goalMap={goalMapArray}
+                />
+            </div>
+    
+            {/* Main Content */}
+            <div className="flex-1 p-4 overflow-auto">
+                <div className={`grid gap-6 ${getPhase() ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-2'}`}>
+                    {(getPhase() === 2 ? [...cardsData].reverse() : cardsData).map((card) => (
+                        <Card
+                            key={card.title}
+                            className={`p-6 hover:shadow-lg transition-shadow border-t-4 border-t-${card.color}-500`}
+                        >
+                            <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
+                                <card.icon className={`h-5 w-5 text-${card.color}-500`} />
+                                {card.title}
+                            </h3>
+                            {card.content}
+                        </Card>
+                    ))}
+                </div>
             </div>
         </div>
     );
