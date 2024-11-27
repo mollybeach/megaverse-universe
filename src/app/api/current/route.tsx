@@ -4,7 +4,6 @@
 * @description: This API is used to fetch the current map and to post and delete polyanets, soloons, and comeths to the current map.
 */
 import { NextResponse, NextRequest } from 'next/server';
-//import {  setPhase } from '@/lib/state/phaseState';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -34,18 +33,6 @@ export async function GET() {
         }
 
         const data = await response.json();
-        /*
-        if (data.map._id === process.env.NEXT_PUBLIC_PHASE_TWO_ID) {
-            setPhase(2);
-        }
-        if (data.map._id === process.env.NEXT_PUBLIC_PHASE_ONE_ID) {
-            setPhase(1);
-        }
-        */
-        const phase = data.map._id === process.env.NEXT_PUBLIC_PHASE_TWO_ID ? 2 : 
-        data.map._id === process.env.NEXT_PUBLIC_PHASE_ONE_ID ? 1 : null;
-        console.log('Phase:', phase);
-        //return NextResponse.json({ ...data, phase }, { status: 200 });
         return NextResponse.json(data, { status: 200 });
         
     } catch (error: unknown) {

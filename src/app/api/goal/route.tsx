@@ -5,19 +5,10 @@
 */
 
 import { NextResponse } from 'next/server';
-//import { setPhase } from '@/lib/state/phaseState';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
-
-const setPhase = (phase: number) => {
-    console.log("phase", phase);
-}
-
-const getPhase = () => {
-    return 2;
-}
 
 export async function GET() {
     try {
@@ -27,10 +18,6 @@ export async function GET() {
             }
         });
         const jsonData = await response.json();
-        
-        if(jsonData.goal.length > 13){
-            setPhase(2);
-        }
         return NextResponse.json(jsonData, { status: 200 });
     } catch (error: unknown) {
         if (error instanceof Error) {

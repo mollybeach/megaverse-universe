@@ -5,7 +5,6 @@
  */
 
 import React, { useState } from 'react';
-import { CurrentMapType } from '@/types/types';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getApiPath } from '@/utils/paths';
@@ -15,10 +14,10 @@ import { validateMap } from '@/utils/mapValidation';
 import { CellType } from '@/types/types';
 
 interface PlotControlsProps {
-    phase: number;
-    currentMapData: CurrentMapType;
+    phase: number | null;
+    currentMap: CellType[][];
     goalMap: CellType[][];
-    updateCurrentMap: (newMap: CurrentMapType) => void;
+    updateCurrentMap: (newMap: CellType[][]) => void;
     row: number;
     column: number;
 }
@@ -26,10 +25,9 @@ interface PlotControlsProps {
 export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsProps) => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
-    const mapArray = props.currentMapData.map.content;
-    const goalMap = props.goalMap;
+
     const handleValidation = () => {
-        const { isValid, errors } = validateMap(mapArray, goalMap);
+        const { isValid, errors } = validateMap(props.currentMap, props.goalMap);
         
         if (isValid) {
             alert('Congratulations! Your solution matches the goal map! 🎉');
@@ -37,6 +35,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             alert(`Solution is not correct yet.\nFound ${errors.length} mismatches.`);
         }
     };
+
     const addEmoji = async (row: number, column: number, emojiType: string) => {
         try {
             setError(null);
@@ -63,21 +62,17 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             }
 
             // Update the local state immediately
-            const updatedCurrentMapData = { ...props.currentMapData };
-            if (updatedCurrentMapData.map.content) {
-                updatedCurrentMapData.map.content[row][column] = emojiType;
-                props.updateCurrentMap(updatedCurrentMapData as CurrentMapType);
-            }
+            const updatedMap = props.currentMap.map(row => [...row]);
+            updatedMap[row][column] = emojiType;
+            props.updateCurrentMap(updatedMap);
 
             // Show success message
             setSuccess(`Successfully added ${emojiType} at position [${row}, ${column}]`);
             
-            // Clear success message after 3 seconds
             setTimeout(() => {
                 setSuccess(null);
             }, 3000);
 
-            // Fetch the latest map data to ensure consistency
             const getCurrentMap = await fetch('/api/current', {
                 method: 'GET',
                 cache: 'no-store',
@@ -106,39 +101,32 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
     const handleDeleteEmoji = async ({emojiType}: {emojiType: string}) => {
         console.log("deleteEmoji", props.row, props.column);
         try {
-            const updatedCurrentMapData = { ...props.currentMapData };
-            if (updatedCurrentMapData.map.content) {
-                updatedCurrentMapData.map.content[props.row][props.column] = 'SPACE'; // Replace with SPACE
-                props.updateCurrentMap(updatedCurrentMapData as CurrentMapType);
-                console.log("updatedCurrentMapData", updatedCurrentMapData);
+            const updatedMap = props.currentMap.map(row => [...row]);
+            updatedMap[props.row][props.column] = 'SPACE';
+            props.updateCurrentMap(updatedMap);
+            console.log("updatedCurrentMapData", updatedMap);
 
-                const response = await fetch(getApiPath('current'), {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        _id: props.currentMapData.map._id,
-                        content: updatedCurrentMapData.map.content,
-                        candidateId: props.currentMapData.map.candidateId,
-                        phase: props.currentMapData.map.phase,
-                        __v: props.currentMapData.map.__v,
-                        row: props.row,
-                        column: props.column,
-                        emojiType
-                    })
-                });
+            const response = await fetch(getApiPath('current'), {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    row: props.row,
+                    column: props.column,
+                    emojiType
+                })
+            });
 
-                const responseData = await response.json();
-                console.log("response", responseData);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                setSuccess(`Successfully deleted emoji at position [${props.row}, ${props.column}]`);
-                setTimeout(() => {
-                    setSuccess(null);
-                }, 3000);
+            const responseData = await response.json();
+            console.log("response", responseData);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            setSuccess(`Successfully deleted emoji at position [${props.row}, ${props.column}]`);
+            setTimeout(() => {
+                setSuccess(null);
+            }, 3000);
         } catch (error) {
             console.error('Error deleting Emoji:', error);
             setError('Failed to delete Emoji.');
@@ -149,19 +137,8 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
         try {
             setError(null);
             
-            // Fetch goal map
-            const goalResponse = await fetch(getApiPath('goal'));
-            const goalData = await goalResponse.json();
-            const goalMap = goalData.goal;
-
-            // Get current map
-            const currentMap = props.currentMapData.map.content;
-
-            // Compare maps and get differences
-            const differences = compareMapWithGoal(currentMap, goalMap);
-            console.log('Differences to process:', differences);
-
-            // Process each difference with delay to avoid rate limiting
+            const currentMap = props.currentMap.map(row => [...row]);
+            const differences = compareMapWithGoal(currentMap, props.goalMap as string[][]);
             for (const diff of differences) {
                 try {
                     let emojiType = '';
@@ -175,21 +152,17 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                     }
 
                     await addEmoji(diff.row, diff.column, emojiType);
-                    
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     
                 } catch (error) {
-                    console.error(`Error processing difference:`, error);
                     setError(`Failed to process some changes. Please try again.`);
                 }
             }
-
         } catch (error) {
-            console.error('Error in auto-sync:', error);
             setError('Failed to auto-sync with goal map');
         }
     };
-
+    
     return (
         <div className="bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md">
             {error && <div className="text-red-500 text-center mb-4">

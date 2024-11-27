@@ -4,7 +4,7 @@
 * @description: Component to display the current megaverse map
 */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { RowType, CellType } from '@/types/types';
 import { LoadingCircle } from './LoadingCircle';
 
@@ -12,14 +12,45 @@ interface MapProps {
     mapArray: CellType[][];
     setRow: (row: number) => void;
     setColumn: (column: number) => void;
-    goalMap?: CellType[][];
 }
 
 const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }: MapProps) => {
+    const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
+    const [isLocked, setIsLocked] = useState(false);
 
-    const handleCellInteraction = (rowIndex: number, cellIndex: number) => {
-        setRow(rowIndex);
-        setColumn(cellIndex);
+    // Add global click listener to reset state
+    useEffect(() => {
+        const handleGlobalClick = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            if (!target.closest('.map-cell')) {
+                setSelectedCell(null);
+                setIsLocked(false);
+                setRow(0);
+                setColumn(0);
+            }
+        };
+
+        document.addEventListener('click', handleGlobalClick);
+        return () => document.removeEventListener('click', handleGlobalClick);
+    }, [setRow, setColumn]);
+
+    const handleCellInteraction = (rowIndex: number, cellIndex: number, isClick: boolean) => {
+        if (isClick) {
+            setSelectedCell({ row: rowIndex, col: cellIndex });
+            setIsLocked(true);
+            setRow(rowIndex);
+            setColumn(cellIndex);
+        } else if (!isLocked) {
+            setRow(rowIndex);
+            setColumn(cellIndex);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (!isLocked) {
+            setRow(0);
+            setColumn(0);
+        }
     };
 
     if (!mapArray || mapArray.length === 0) {
@@ -27,7 +58,10 @@ const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }: MapProps) => {
     }
 
     return (
-        <div className="flex justify-center items-center w-full">
+        <div 
+            className="flex justify-center items-center w-full"
+            onMouseLeave={handleMouseLeave}
+        >
             <div className="inline-block">
                 <div className="grid grid-cols-1" style={{ 
                     letterSpacing: '0.5em',
@@ -77,8 +111,11 @@ const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }: MapProps) => {
                                 }
                                 return (
                                     <span   
-                                        onClick={() => handleCellInteraction(rowIndex, cellIndex)}
-                                        onMouseEnter={() => handleCellInteraction(rowIndex, cellIndex)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleCellInteraction(rowIndex, cellIndex, true);
+                                        }}
+                                        onMouseEnter={() => handleCellInteraction(rowIndex, cellIndex, false)}
                                         key={cellIndex} 
                                         style={{
                                             cursor: 'pointer',
@@ -94,12 +131,14 @@ const Map: React.FC<MapProps> = ({ mapArray, setRow, setColumn }: MapProps) => {
                                             )
                                         }} 
                                         className={`
+                                            map-cell
                                             ${displayRotation === 'up' ? 'rotate-[48deg] relative top-1 right-0' :
                                             displayRotation === 'down' ? 'rotate-[230deg] relative right-1 bottom-1' :
                                             displayRotation === 'right' ? 'rotate-[140deg] relative right-2 top-1' :
                                             displayRotation === 'left' ? 'rotate-[330deg] relative left-0 bottom-1' :
                                             ''}
                                             select-none
+                                            ${selectedCell?.row === rowIndex && selectedCell?.col === cellIndex ? 'ring-2 ring-blue-500' : ''}
                                         `}
                                     >                       
                                         {displayValue}
