@@ -75,7 +75,11 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
         }
     };
 
-    const handleDeleteEmoji = async ({emojiType}: {emojiType: string}) => {
+    const handleDeleteEmoji = async ({emojiType, row = props.row, column = props.column}: {
+        emojiType: string;
+        row?: number;
+        column?: number;
+    }) => {
         try {
             setIsLoading(true);
             setError(null);
@@ -87,8 +91,8 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ 
-                    row: props.row,
-                    column: props.column,
+                    row,
+                    column,
                     emojiType
                 })
             });
@@ -99,7 +103,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             setCurrentMapArray([...data.map.content]);
             await fetchCurrentMap();
             
-            setSuccess(`Successfully deleted ${emojiType} at position [${props.row}, ${props.column}]`);
+            setSuccess(`Successfully deleted ${emojiType} at position [${row}, ${column}]`);
             setTimeout(() => setSuccess(null), 3000);
 
         } catch (error) {
@@ -120,19 +124,31 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             
             const mapCopy = currentMapArray.map(row => [...row]);
             const differences = compareMapWithGoal(mapCopy, goalMapArray as string[][]);
+            
             for (const diff of differences) {
                 try {
-                    let emojiType = '';
+                    const goalCell = goalMapArray[diff.row][diff.column];
                     
-                    if (diff.type === 'POLYANET') {
-                        emojiType = 'POLYANET';
-                    } else if (diff.type === 'SOLOON') {
-                        emojiType = `${diff.color?.toUpperCase()}_SOLOON`;
-                    } else if (diff.type === 'COMETH') {
-                        emojiType = `${diff.direction?.toUpperCase()}_COMETH`;
+                    if (goalCell === 'SPACE') {
+                        // Delete existing emoji
+                        await handleDeleteEmoji({ 
+                            emojiType: 'POLYANET',
+                            row: diff.row,
+                            column: diff.column
+                        });
+                    } else {
+                        // Add new emoji
+                        let emojiType = '';
+                        if (diff.type === 'POLYANET') {
+                            emojiType = 'POLYANET';
+                        } else if (diff.type === 'SOLOON') {
+                            emojiType = `${diff.color?.toUpperCase()}_SOLOON`;
+                        } else if (diff.type === 'COMETH') {
+                            emojiType = `${diff.direction?.toUpperCase()}_COMETH`;
+                        }
+                        await addEmoji(diff.row, diff.column, emojiType);
                     }
-
-                    await addEmoji(diff.row, diff.column, emojiType);
+                    
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     
                 } catch (error) {
@@ -226,7 +242,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                                 <Button onClick={() => addEmoji(props.row, props.column, 'RIGHT_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
                                     Add
                                     <span className='rotate-[140deg] inline-block left-1.5 relative'>
-                                        ☄️
+                                        ���️
                                     </span>
                                 </Button>
                                 <Button onClick={() => addEmoji(props.row, props.column, 'LEFT_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
