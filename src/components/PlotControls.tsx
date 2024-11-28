@@ -294,20 +294,18 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                         </div>
                     )}
                 </div>
-                <div className="flex space-x-4 mt-4">
-                    <Button 
-                        onClick={handleResetToVoid}
-                        className="bg-gradient-to-r from-gray-800 to-purple-900 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200"
-                    >
-                        Reset to Cosmic Void 🌌
-                    </Button>
-                    <Button 
-                        onClick={handleAutoSync}
-                        className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200"
-                    >
-                        Auto-Sync with Goal Map 🚀
-                    </Button>
-                </div>
+                <Button 
+                    onClick={handleAutoSync}
+                    className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200 mt-4"
+                >
+                    Auto-Sync with Goal Map 🚀
+                </Button>
+                <Button 
+                    onClick={handleResetToVoid}
+                    className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200 mt-4"
+                >
+                    Reset to Cosmic Void 🌌
+                </Button>
                 <div className="text-center mt-4">
                     {isLoading ? (
                         <SunLoadingCircle size="lg" message={error || "Loading..."} />
