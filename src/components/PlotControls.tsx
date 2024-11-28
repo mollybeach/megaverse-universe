@@ -177,7 +177,14 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             const nonSpaceCells = [];
             for (let row = 0; row < currentMapArray.length; row++) {
                 for (let col = 0; col < currentMapArray[row].length; col++) {
-                    if (currentMapArray[row][col] !== 'SPACE') {
+                    const cell = currentMapArray[row][col];
+                    // Check both string and object types
+                    if (
+                        cell !== null && 
+                        cell !== 'SPACE' && 
+                        (typeof cell === 'string' || 
+                        (typeof cell === 'object' && 'type' in cell))
+                    ) {
                         nonSpaceCells.push({ row, col });
                     }
                 }
