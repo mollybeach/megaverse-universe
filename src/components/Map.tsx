@@ -123,6 +123,7 @@ const Map: React.FC<MapProps> = memo(({ mapArray, setRow, setColumn }: MapProps)
                                                 display: 'inline-block',
                                                 width: '1.5em',
                                                 textAlign: 'center',
+                                                fontSize: 'var(--emoji-size)',
                                                 ...(displayColor === 'none' && displayRotation === 'none' ? {} : 
                                                     displayColor === 'white' ? { filter: 'grayscale(100%)' } :
                                                     displayColor === 'blue' ? { filter: 'grayscale(100%) brightness(30%) sepia(100%) hue-rotate(-180deg) saturate(700%) contrast(0.8' } :
@@ -133,6 +134,7 @@ const Map: React.FC<MapProps> = memo(({ mapArray, setRow, setColumn }: MapProps)
                                             }} 
                                             className={`
                                                 map-cell
+                                                emoji-cell
                                                 ${displayRotation === 'up' ? 'rotate-[48deg] relative top-1 right-0' :
                                                 displayRotation === 'down' ? 'rotate-[230deg] relative right-1 bottom-1' :
                                                 displayRotation === 'right' ? 'rotate-[140deg] relative right-2 top-1' :

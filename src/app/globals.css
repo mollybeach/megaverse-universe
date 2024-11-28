@@ -5,6 +5,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --emoji-size: 24px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,4 +19,31 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Small screens */
+@media (max-width: 640px) {
+    :root {
+        --emoji-size: 8px;
+    }
+}
+
+/* Medium screens */
+@media (min-width: 641px) and (max-width: 1024px) {
+    :root {
+        --emoji-size: 12px;
+    }
+}
+
+/* Large screens */
+@media (min-width: 1025px) {
+    :root {
+        --emoji-size: 18px;
+    }
+}
+
+.emoji-cell {
+    font-size: var(--emoji-size);
+    line-height: 1.5;
+    transition: font-size 0.3s ease;
 }
