@@ -130,27 +130,16 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                     const goalCell = goalMapArray[diff.row][diff.column];
                     
                     if (goalCell === 'SPACE') {
-                        // Delete existing emoji
                         await handleDeleteEmoji({ 
                             emojiType: 'POLYANET',
                             row: diff.row,
                             column: diff.column
                         });
                     } else {
-                        // Add new emoji
-                        let emojiType = '';
-                        if (diff.type === 'POLYANET') {
-                            emojiType = 'POLYANET';
-                        } else if (diff.type === 'SOLOON') {
-                            emojiType = `${diff.color?.toUpperCase()}_SOLOON`;
-                        } else if (diff.type === 'COMETH') {
-                            emojiType = `${diff.direction?.toUpperCase()}_COMETH`;
-                        }
-                        await addEmoji(diff.row, diff.column, emojiType);
+                        await addEmoji(diff.row, diff.column, diff.emojiType);
                     }
                     
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                    
                 } catch (error) {
                     setError(`Failed to process some changes. Please try again.`);
                 }
@@ -242,7 +231,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                                 <Button onClick={() => addEmoji(props.row, props.column, 'RIGHT_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
                                     Add
                                     <span className='rotate-[140deg] inline-block left-1.5 relative'>
-                                        ���️
+                                        ️
                                     </span>
                                 </Button>
                                 <Button onClick={() => addEmoji(props.row, props.column, 'LEFT_COMETH')} className="w-24 bg-gradient-to-r from-green-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200">
