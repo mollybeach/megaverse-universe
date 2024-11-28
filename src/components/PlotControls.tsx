@@ -21,9 +21,16 @@ interface PlotControlsProps {
     column: number;
 }
 
+interface SuccessMessage {
+    id: number;
+    message: string;
+    timestamp: number;
+}
+
 export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsProps) => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const [syncMessages, setSyncMessages] = useState<SuccessMessage[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const {
@@ -102,8 +109,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             const data = await response.json();
             setCurrentMapArray([...data.map.content]);
             await fetchCurrentMap();
-            
-            setSuccess(`Successfully deleted ${emojiType} at position [${row}, ${column}]`);
+            setSuccess(`Successfully deleted item at position [${row}, ${column}]`);
             setTimeout(() => setSuccess(null), 3000);
 
         } catch (error) {
@@ -120,7 +126,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
         try {
             setIsLoading(true);
             setError(null);
-            setSuccess(null);
+            setSyncMessages([]);
             
             const mapCopy = currentMapArray.map(row => [...row]);
             const differences = compareMapWithGoal(mapCopy, goalMapArray as string[][]);
@@ -135,8 +141,18 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                             row: diff.row,
                             column: diff.column
                         });
+                        setSyncMessages(prev => [{
+                            id: Date.now(),
+                            message: `Deleted POLYANET at position [${diff.row}, ${diff.column}]`,
+                            timestamp: Date.now()
+                        }, ...prev]);
                     } else {
                         await addEmoji(diff.row, diff.column, diff.emojiType);
+                        setSyncMessages(prev => [{
+                            id: Date.now(),
+                            message: `Added ${diff.emojiType} at position [${diff.row}, ${diff.column}]`,
+                            timestamp: Date.now()
+                        }, ...prev]);
                     }
                     
                     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -146,6 +162,40 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             }
         } catch (error) {
             setError(getSpaceErrorMessage('sync'));
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleResetToVoid = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            setSyncMessages([]);
+
+            // Get all non-SPACE cells from current map
+            const nonSpaceCells = [];
+            for (let row = 0; row < currentMapArray.length; row++) {
+                for (let col = 0; col < currentMapArray[row].length; col++) {
+                    if (currentMapArray[row][col] !== 'SPACE') {
+                        nonSpaceCells.push({ row, col });
+                    }
+                }
+            }
+
+            // Delete all cells
+            for (const cell of nonSpaceCells) {
+                await handleDeleteEmoji({
+                    emojiType: 'POLYANET', // We can use POLYANET as it will delete any type
+                    row: cell.row,
+                    column: cell.col
+                });
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            setSuccess('Universe reset to pre-existence state 🌌');
+        } catch (error) {
+            setError('Failed to reset the universe');
         } finally {
             setIsLoading(false);
         }
@@ -244,18 +294,37 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                         </div>
                     )}
                 </div>
-                <Button 
-                    onClick={handleAutoSync}
-                    className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200 mt-4"
-                >
-                    Auto-Sync with Goal Map 🚀
-                </Button>
+                <div className="flex space-x-4 mt-4">
+                    <Button 
+                        onClick={handleResetToVoid}
+                        className="bg-gradient-to-r from-gray-800 to-purple-900 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200"
+                    >
+                        Reset to Cosmic Void 🌌
+                    </Button>
+                    <Button 
+                        onClick={handleAutoSync}
+                        className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200"
+                    >
+                        Auto-Sync with Goal Map 🚀
+                    </Button>
+                </div>
                 <div className="text-center mt-4">
                     {isLoading ? (
                         <SunLoadingCircle size="lg" message={error || "Loading..."} />
                     ) : success ? (
                         <div className="text-green-500 font-semibold">
                             {success}
+                        </div>
+                    ) : syncMessages.length > 0 ? (
+                        <div className="flex flex-col space-y-2 max-h-40 overflow-y-auto">
+                            {syncMessages.map((msg) => (
+                                <div 
+                                    key={msg.id}
+                                    className="text-green-500 font-semibold animate-fade-in"
+                                >
+                                    {msg.message}
+                                </div>
+                            ))}
                         </div>
                     ) : null}
                 </div>
