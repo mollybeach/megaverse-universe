@@ -109,7 +109,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             const data = await response.json();
             setCurrentMapArray([...data.map.content]);
             await fetchCurrentMap();
-            setSuccess(`Successfully deleted item at position [${row}, ${column}]`);
+            setSuccess(`Successfully deleted ${currentMapArray[row][column]} at position [${row}, ${column}]`);
             setTimeout(() => setSuccess(null), 3000);
 
         } catch (error) {
@@ -193,7 +193,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             // Delete all cells
             for (const cell of nonSpaceCells) {
                 await handleDeleteEmoji({
-                    emojiType: 'POLYANET', // We can use POLYANET as it will delete any type
+                    emojiType: 'POLYANET', 
                     row: cell.row,
                     column: cell.col
                 });
