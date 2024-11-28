@@ -158,4 +158,3 @@ const Map: React.FC<MapProps> = memo(({ mapArray, setRow, setColumn }: MapProps)
 });
 
 export default Map;
-
