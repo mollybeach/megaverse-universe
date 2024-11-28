@@ -120,23 +120,18 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             
             const mapCopy = currentMapArray.map(row => [...row]);
             const differences = compareMapWithGoal(mapCopy, goalMapArray as string[][]);
+            
             for (const diff of differences) {
                 try {
-                    let emojiType = '';
-                    
-                    if (diff.type === 'POLYANET') {
-                        emojiType = 'POLYANET';
-                    } else if (diff.type === 'SOLOON') {
-                        emojiType = `${diff.color?.toUpperCase()}_SOLOON`;
-                    } else if (diff.type === 'COMETH') {
-                        emojiType = `${diff.direction?.toUpperCase()}_COMETH`;
+                    if (diff.emojiType === 'SPACE') {
+                        await handleDeleteEmoji({ emojiType: currentMapArray[diff.row][diff.column] as string });
+                    } else {
+                        await addEmoji(diff.row, diff.column, diff.emojiType);
                     }
-
-                    await addEmoji(diff.row, diff.column, emojiType);
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                    
                 } catch (error) {
-                    setError(`Failed to process some changes. Please try again.`);
+                    setError(`Failed to process changes at position [${diff.row}, ${diff.column}]. Please try again.`);
+                    break;
                 }
             }
         } catch (error) {
