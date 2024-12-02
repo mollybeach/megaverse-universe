@@ -57,6 +57,42 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { row, column, emojiType } = body;
 
+        // Special handling for reset operation
+        if (emojiType === 'RESET') {
+            const payload = {
+                candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
+                content: Array(30).fill(Array(30).fill(null)) // 30x30 grid of nulls
+            };
+
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '');
+            const endpoint = `${baseUrl}/map`;
+
+            const rawResponse = await fetch(endpoint, {
+                method: 'POST',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }),
+                body: JSON.stringify(payload),
+                mode: 'cors',
+                credentials: 'omit'
+            });
+
+            if (!rawResponse.ok) {
+                const errorData = await rawResponse.json();
+                return NextResponse.json({ error: errorData }, { status: rawResponse.status });
+            }
+
+            const data = await rawResponse.json();
+            return NextResponse.json({
+                map: {
+                    content: Array.isArray(data) ? data : [],
+                    phase: body.phase || null
+                }
+            });
+        }
+
+        // Regular emoji handling (existing code)
         const { entityType, color, direction } = getEmojiTypeMapping(emojiType);
         const payload: Payload = {
             candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
