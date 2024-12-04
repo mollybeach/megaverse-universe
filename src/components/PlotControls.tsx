@@ -310,7 +310,7 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                     onClick={handleResetToVoid}
                     className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200 mt-4"
                 >
-                    Reset to Cosmic Void 🌌
+                    Reset to the Cosmic Void 🌌
                 </Button>
                 <div className="text-center mt-4">
                     {isLoading ? (
