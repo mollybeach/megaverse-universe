@@ -166,7 +166,12 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
             setIsLoading(false);
         }
     };
-
+    const handleAutoSyncFast = async () => {
+        await addEmoji(0, 0, 'GOAL_MAP');
+    };
+    const handleResetToVoidFast = async () => {
+        await addEmoji(0, 0, 'RESET');
+    };  
     const handleResetToVoid = async () => {
         try {
             setIsLoading(true);
@@ -308,10 +313,22 @@ export const PlotControls: React.FC<PlotControlsProps> = (props: PlotControlsPro
                     Auto-Sync with Goal Map 🚀
                 </Button>
                 <Button 
+                    onClick={handleAutoSyncFast}
+                    className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200 mt-4"
+                >
+                    Fast Auto-Sync Goal Map 🚀
+                </Button>
+                <Button 
                     onClick={handleResetToVoid}
                     className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200 mt-4"
                 >
                     Reset to Cosmic Void 🌌
+                </Button>
+                <Button 
+                    onClick={handleResetToVoidFast}
+                    className="bg-gradient-to-r from-blue-600 to-purple-400 text-white hover:shadow-lg transition-shadow transform hover:scale-105 active:scale-95 active:shadow-inner transition-transform duration-200 mt-4"
+                >
+                    Fast Reset to Cosmic Void 🌌
                 </Button>
                 <div className="text-center mt-4">
                     {isLoading ? (

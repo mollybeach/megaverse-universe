@@ -5,6 +5,7 @@
 */
 import { NextResponse, NextRequest } from 'next/server';
 import { getEmojiTypeMapping } from '@/utils/emojiTypeMapper';
+import { goalMapDataPhaseTwo } from '@/lib/data/goalMap';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -64,7 +65,7 @@ export async function POST(request: Request) {
                 content: Array(30).fill(Array(30).fill(null)) // 30x30 grid of nulls
             };
 
-            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '');
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, ''); 
             const endpoint = `${baseUrl}/map`;
 
             const rawResponse = await fetch(endpoint, {
@@ -91,6 +92,37 @@ export async function POST(request: Request) {
                 }
             });
         }
+
+        if (emojiType === 'GOAL_MAP') {
+            const payload = {
+                candidateId: process.env.NEXT_PUBLIC_CANDIDATE_ID,
+                content: goalMapDataPhaseTwo.goal
+            }
+
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, ''); 
+            const endpoint = `${baseUrl}/map`;
+
+            const rawResponse = await fetch(endpoint, {
+                method: 'POST',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }),
+                body: JSON.stringify(payload),
+                mode: 'cors',
+                credentials: 'omit'
+            });
+
+            const data = await rawResponse.json();
+            return NextResponse.json({
+                map: {
+                    content: Array.isArray(data) ? data : [],
+                    phase: body.phase || null
+                }
+            });
+        }
+
+
 
         // Regular emoji handling (existing code)
         const { entityType, color, direction } = getEmojiTypeMapping(emojiType);
